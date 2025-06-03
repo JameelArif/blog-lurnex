@@ -33,5 +33,4 @@ export default function Post({ posts }) {
       )}
     </>
   );
-  
 }
