@@ -5,8 +5,24 @@ import PostList from "@/components/postlist";
 export default function Post({ posts }) {
   return (
     <>
+      <div className="relative w-full h-64 md:h-96">
+        <img
+          src="/img/top.png"
+          alt="Banner"
+          className="object-cover w-full h-full"
+        />
+        <div className="absolute inset-0 flex  items-center justify-start pl-16">
+          <h1 className="text-white md:leading-tight text-4xl md:text-5xl font-extrabold">
+            Discover our
+            <div>
+            stories and insights
+            </div>
+          </h1>
+        </div>
+      </div>
       {posts && (
         <Container>
+
           <div className="grid gap-10 md:grid-cols-2 lg:gap-10 ">
             {posts.slice(0, 2).map(post => (
               <PostList

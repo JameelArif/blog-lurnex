@@ -20,10 +20,10 @@ export default function Footer(props) {
            // It helps us to grow & continue our work. Thank you.
           // OR Purchase PRO version for commercial license.  */}
           <a
-            href="https://web3templates.com/?ref=stablo-template"
+            href="https://github.com/JameelArif"
             rel="noopener"
             target="_blank">
-            Web3Templates
+            Jameel Arif
           </a>
         </span>
         <span>&middot;</span>
@@ -37,22 +37,7 @@ export default function Footer(props) {
           </a>
         </span>
       </div>
-      <div className="mt-2 flex items-center justify-between">
-        <div className="mt-5">
-          <a
-            href="https://vercel.com/?utm_source=web3templates&utm_campaign=oss"
-            target="_blank"
-            rel="noopener"
-            className="relative block w-44">
-            <Image
-              src={VercelLogo}
-              alt="Powered by Vercel"
-              unoptimized={true}
-              width="150"
-              height="25"
-            />
-          </a>
-        </div>
+      <div className="mt-2 flex items-end justify-end">
         <ThemeSwitch />
       </div>
       <Backlink />
