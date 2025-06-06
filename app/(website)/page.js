@@ -1,6 +1,5 @@
 import HomePage from "./home";
 import { getAllPosts } from "@/lib/sanity/client";
-export const revalidate = 60;
 export default async function IndexPage() {
   const posts = await getAllPosts();
   return <HomePage posts={posts} />;
@@ -8,4 +7,4 @@ export default async function IndexPage() {
 
 
 
-// export const revalidate = 60;
+export const revalidate = 60;
