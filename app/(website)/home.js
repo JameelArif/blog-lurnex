@@ -5,7 +5,7 @@ import PostList from "@/components/postlist";
 export default function Post({ posts }) {
   return (
     <>
-      <div className="relative w-full h-48 md:h-[32vh] lg:h-[40vh] xl:h-[48vh] 2xl:h-[56vh] rounded-xl shadow-lg bg-[#2DA9E1] overflow-hidden">
+      <div className="relative w-full h-48 md:h-[32vh] lg:h-[40vh] xl:h-[48vh] 2xl:h-[56vh] shadow-lg bg-[#2DA9E1] overflow-hidden">
         <img
           src="/img/top.png"
           alt="Banner"

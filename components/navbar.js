@@ -45,24 +45,24 @@ export default function Navbar(props) {
 
 
                 
-          <div className="w-36 dark:hidden block transition-transform duration-300 hover:scale-110">
+          <div className="flex w-full items-center justify-between md:w-auto block transition-transform duration-300 hover:scale-105">
             {/* Light Mode Logo */}
             <Link href="/" className="w-28 dark:hidden block">
               <Image
                 src="/logo.png"
                 alt="Lurnex Logo"
-                width={115}
+                width={112}
                 height={40}
                 priority
               />
             </Link>
 
             {/* Dark Mode Logo */}
-            <Link href="/" className="hidden w-36 dark:block transition-transform duration-300 hover:scale-110">
+            <Link href="/" className="hidden w-28 dark:block">
               <Image
                 src="/logo.png" // You can change this to /logo-dark.png if needed
                 alt="Lurnex Logo Dark"
-                width={115}
+                width={112}
                 height={40}
                 priority
               />
