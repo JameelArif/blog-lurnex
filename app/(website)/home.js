@@ -5,16 +5,16 @@ import PostList from "@/components/postlist";
 export default function Post({ posts }) {
   return (
     <>
-      <div className="relative w-full h-64 md:h-96">
+      <div className="relative w-full h-48 md:h-[32vh] lg:h-[40vh] xl:h-[48vh] 2xl:h-[56vh]">
         <img
           src="/img/top.png"
           alt="Banner"
-          className="object-cover w-full h-full"
+          className="object-cover w-full h-full rounded-xl shadow-lg"
         />
         <div className="absolute inset-0 flex  items-center justify-start pl-16">
-          <h1 className="text-white md:leading-tight text-4xl md:text-5xl font-extrabold">
-            Discover our
-            <div>
+          <h1 className="text-white drop-shadow-2xl md:leading-tight text-4xl md:text-5xl font-extrabold">
+            <span className="drop-shadow-2xl">Discover our</span>
+            <div className="drop-shadow-2xl">
             stories and insights
             </div>
           </h1>

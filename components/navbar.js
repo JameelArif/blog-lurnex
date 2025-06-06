@@ -41,28 +41,28 @@ export default function Navbar(props) {
         <Disclosure>
           {({ open }) => (
             <>
-              <div className="flex flex-wrap justify-between md:flex-nowrap md:gap-10">
+              <div className="flex w-full items-center justify-between md:w-auto">
 
 
                 
-          <div className="flex w-full items-center justify-between md:w-auto">
+          <div className="w-36 dark:hidden block transition-transform duration-300 hover:scale-110">
             {/* Light Mode Logo */}
             <Link href="/" className="w-28 dark:hidden block">
               <Image
                 src="/logo.png"
                 alt="Lurnex Logo"
-                width={112}
+                width={115}
                 height={40}
                 priority
               />
             </Link>
 
             {/* Dark Mode Logo */}
-            <Link href="/" className="hidden w-28 dark:block">
+            <Link href="/" className="hidden w-36 dark:block transition-transform duration-300 hover:scale-110">
               <Image
                 src="/logo.png" // You can change this to /logo-dark.png if needed
                 alt="Lurnex Logo Dark"
-                width={112}
+                width={115}
                 height={40}
                 priority
               />
@@ -94,7 +94,7 @@ export default function Navbar(props) {
                   </Disclosure.Button>
                 </div>
 
-                <div className="order-2 hidden w-full flex-col items-center justify-start md:order-none md:flex md:w-auto md:flex-1 md:flex-row">
+                <div className="order-2 hidden w-full flex-col items-center justify-end md:order-none md:flex md:w-auto md:flex-1 md:flex-row">
                   {rightmenu.map((item, index) => (
                     <Fragment key={`${item.label}${index}`}>
                       {item.children && item.children.length > 0 ? (
@@ -107,7 +107,7 @@ export default function Navbar(props) {
                         <Link
                           href={item.href}
                           key={`${item.label}${index}`}
-                          className="px-5 py-2 text-sm font-medium text-gray-600 hover:text-blue-500 dark:text-gray-400"
+                          className="px-5 py-2 text-base font-medium text-[#2DA9E1] hover:text-[#2DA9E1] dark:text-[#EFF8FD] dark:hover:text-[#2DA9E1] transition-colors transition-transform duration-500 ease-in-out transform hover:scale-110"
                           target={item.external ? "_blank" : ""}
                           rel={item.external ? "noopener" : ""}>
                           <span> {item.label}</span>
