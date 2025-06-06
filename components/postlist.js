@@ -118,3 +118,4 @@ export default function PostList({
 }
 
 
+export const revalidate = 60;

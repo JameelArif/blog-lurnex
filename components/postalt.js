@@ -94,3 +94,5 @@ export default function PostAlt({
     </>
   );
 }
+
+export const revalidate = 60;
