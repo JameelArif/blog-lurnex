@@ -7,4 +7,4 @@ export default async function IndexPage() {
 
 
 
-export const revalidate = 60;
+export const revalidate = 60; // Revalidate every 60 seconds
