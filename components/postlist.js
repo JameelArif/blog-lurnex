@@ -145,6 +145,9 @@ export default function PostList({
   const authorSlug = post?.author?.slug?.current;
 
   return (
+
+    
+
         <div className="bg-white hover:bg-[#f3faff]  rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden p-6 max-w-sm transition-all hover:scale-105">
             <Link href={`/post/${pathPrefix ? `${pathPrefix}/` : ""}${post?.slug?.current || ""}`}>
               <div className="w-full h-[190px] relative rounded-lg overflow-hidden mb-3">

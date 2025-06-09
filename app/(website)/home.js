@@ -2,7 +2,28 @@ import Link from "next/link";
 import Container from "@/components/container";
 import PostList from "@/components/postlist";
 
-export default function Post({ posts }) {
+export default function HomePage({ posts, selectedCategory }) {
+  // Get all unique categories from posts
+  const categories = [
+    "All Posts",
+    ...Array.from(
+      new Set(
+        posts.flatMap(post =>
+          post.categories ? post.categories.map(cat => cat.title) : []
+        )
+      )
+    ),
+  ];
+
+  // Filter posts based on selectedCategory
+  const filteredPosts =
+    selectedCategory === "All Posts"
+      ? posts
+      : posts.filter(post =>
+          post.categories &&
+          post.categories.some(cat => cat.title === selectedCategory)
+        );
+
   return (
     <>
       <div className="relative w-full h-48 md:h-[32vh] lg:h-[40vh] xl:h-[48vh] 2xl:h-[56vh] shadow-lg bg-[#2DA9E1] overflow-hidden">
@@ -11,56 +32,41 @@ export default function Post({ posts }) {
           alt="Banner"
           className="object-cover w-full h-full shadow-lg"
         />
-        <div className="absolute inset-0 flex  items-center justify-start pl-16">
+        <div className="absolute inset-0 flex items-center justify-start pl-16">
           <h1 className="text-white drop-shadow-2xl md:leading-tight text-4xl md:text-5xl font-extrabold">
             <span className="drop-shadow-2xl">Discover our</span>
             <div className="drop-shadow-2xl">
-            stories and insights
+              stories and insights
             </div>
           </h1>
         </div>
       </div>
 
-
-
-      {posts && (
-        <Container>
-
-
-
-          
-        {/* Featured Posts Section 
-          <div className="grid gap-10 md:grid-cols-2 lg:gap-10 ">
-            {posts.slice(0, 2).map(post => (
-              <PostList
-                key={post._id}
-                post={post}
-                aspect="landscape"
-                preloadImage={true}
-              />
-            ))}
-          </div>
-          */}
-
-
-          <div className="mt-16 grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
-            {posts.slice(0, 14).map(post => (
-              <PostList key={post._id} post={post} aspect="rectangle" />
-            ))}
-          </div>
-
-
-          <div className="mt-10 flex justify-center">
+      <Container>
+        {/* Category List */}
+        <div className="flex flex-wrap gap-3 justify-center mb-10">
+          {categories.map(category => (
             <Link
-              href="/archive"
-              className="relative inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-3 py-2 pl-4 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 disabled:pointer-events-none disabled:opacity-40 dark:border-gray-500 dark:bg-gray-800 dark:text-gray-300">
-              <span>View all Posts</span>
+              key={category}
+              href={category === "All Posts" ? "/" : `/?category=${encodeURIComponent(category)}`}
+              className={`px-4 py-2 rounded-full ${
+                selectedCategory === category
+                  ? "bg-blue-100 text-blue-700 font-semibold"
+                  : "bg-blue-50 text-blue-600 font-medium"
+              } hover:bg-blue-200 transition`}
+            >
+              {category}
             </Link>
-          </div>
-        </Container>
-      )}
+          ))}
+        </div>
 
-
+        {/* Posts Grid */}
+        <div className="mt-16 grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
+          {filteredPosts.slice(0, 14).map(post => (
+            <PostList key={post._id} post={post} aspect="rectangle" />
+          ))}
+        </div>
+      </Container>
     </>
   );
 }
