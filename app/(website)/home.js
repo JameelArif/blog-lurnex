@@ -9,7 +9,7 @@ export default function Post({ posts }) {
         <img
           src="/img/top.png"
           alt="Banner"
-          className="object-cover w-full h-full rounded-xl shadow-lg"
+          className="object-cover w-full h-full shadow-lg"
         />
         <div className="absolute inset-0 flex  items-center justify-start pl-16">
           <h1 className="text-white drop-shadow-2xl md:leading-tight text-4xl md:text-5xl font-extrabold">

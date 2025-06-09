@@ -1,7 +1,22 @@
 import { getSettings } from "@/lib/sanity/client";
-import Footer from "@/components/footer";
+import Footer from "@/components/footerl";
 import { urlForImage } from "@/lib/sanity/image";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/navbarlurnex";
+import { Inter, Merriweather } from 'next/font/google'
+
+const inter = Inter({ 
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+const merriweather = Merriweather({ 
+  weight: ['300', '400', '700'],
+  subsets: ['latin'],
+  variable: '--font-merriweather',
+  display: 'swap',
+})
+
 
 async function sharedMetaData(params) {
   const settings = await getSettings();
