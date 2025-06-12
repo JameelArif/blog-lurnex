@@ -44,16 +44,22 @@ export default function HomePage({ posts, selectedCategory }) {
 
       <Container>
         {/* Category List */}
-        <div className="flex flex-wrap gap-3 justify-center mb-10">
+        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-10">
           {categories.map(category => (
             <Link
               key={category}
               href={category === "All Posts" ? "/" : `/?category=${encodeURIComponent(category)}`}
-              className={`px-4 py-2 rounded-full ${
-                selectedCategory === category
+              className={`
+                px-2 py-1
+                sm:px-3 sm:py-1.5
+                md:px-4 md:py-2
+                text-xs sm:text-sm md:text-base
+                rounded-full
+                ${selectedCategory === category
                   ? "bg-blue-100 text-blue-700 font-semibold"
-                  : "bg-blue-50 text-blue-600 font-medium"
-              } hover:bg-blue-200 transition`}
+                  : "bg-blue-50 text-blue-600 font-medium"}
+                hover:bg-blue-200 transition
+              `}
             >
               {category}
             </Link>

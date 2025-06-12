@@ -2,15 +2,16 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Blog', href: '/' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' },
   ]
 
   return (
@@ -22,7 +23,8 @@ export default function Header() {
             href="/" 
             className="flex items-center font-bold text-2xl text-lurnex-blue hover:text-lurnex-blue-dark transition-colors"
           >
-            LURNEX
+            <span className="sr-only">Lurnex Home</span>
+            <img src="/logo.png" alt="Lurnex Logo" width={120} height={32} className="object-contain h-8 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -31,7 +33,9 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-600 hover:text-lurnex-blue font-medium transition-colors duration-200 text-sm uppercase tracking-wide"
+                className={`text-gray-600 hover:text-lurnex-blue font-medium transition-colors duration-200 text-sm uppercase tracking-wide ${
+                  pathname === item.href ? 'text-lurnex-blue ' : ''
+                }`}
               >
                 {item.name}
               </Link>
@@ -86,7 +90,9 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200 py-2"
+                  className={`text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200 py-2 ${
+                    pathname === item.href ? 'text-lurnex-blue pl-2' : ''
+                  }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}

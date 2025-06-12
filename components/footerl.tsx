@@ -5,8 +5,8 @@ export default function Footer() {
 
   const footerLinks = {
     company: [
-      { name: 'About', href: '#about' },
-      { name: 'Contact', href: '#contact' },
+      { name: 'About', href: '/about' },
+      { name: 'Contact', href: '/contact' },
       { name: 'Privacy Policy', href: '#privacy' },
       { name: 'Terms of Service', href: '#terms' },
     ],
@@ -58,7 +58,8 @@ export default function Footer() {
               href="/" 
               className="font-bold text-2xl mb-6 block"
             >
-              LURNEX
+              <span className="sr-only">Lurnex Home</span>
+              <img src="/logo.png" alt="Lurnex Logo" width={120} height={32} className="object-contain h-8 w-auto" />
             </Link>
             <div className="flex items-center space-x-4 mb-6">
               <a href="#" className="text-white hover:text-blue-200 transition-colors">

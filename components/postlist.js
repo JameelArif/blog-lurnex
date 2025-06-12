@@ -176,15 +176,15 @@ export default function PostList({
 
       <div className="p-5">
         {/* Categories */}
-        <div className="mb-3 flex flex-wrap gap-2">
+        <div className="mb-2 flex flex-wrap gap-1.5">
           {post.categories?.map((cat, index) => (
-          <Link
-            key={index}
-            href={`/category/${cat.slug?.current || ""}`}
-            className="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full hover:bg-blue-200 transition-colors"
-          >
-            {cat.title}
-          </Link>
+            <Link
+              key={index}
+              href={`/category/${cat.slug?.current || ""}`}
+              className="inline-flex items-center justify-center font-medium px-1.5 py-0.5 text-[9px] bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-full transition-all duration-200 sm:text-[10px] md:text-[11px] lg:text-xs"
+            >
+              {cat.title}
+            </Link>
           ))}
         </div>
 
