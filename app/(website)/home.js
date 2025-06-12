@@ -56,8 +56,8 @@ export default function HomePage({ posts, selectedCategory }) {
                 text-xs sm:text-sm md:text-base
                 rounded-full
                 ${selectedCategory === category
-                  ? "bg-blue-100 text-blue-700 font-semibold"
-                  : "bg-blue-50 text-blue-600 font-medium"}
+                  ? "bg-blue-100  font-semibold"
+                  : "bg-blue-50  font-medium"}
                 hover:bg-blue-200 transition
               `}
             >
