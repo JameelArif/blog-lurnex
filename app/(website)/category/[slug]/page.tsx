@@ -21,8 +21,8 @@ export async function generateMetadata({ params }) {
   }
 
   return {
-    title: `${category.title} Posts | Lurnex Blog`,
-    description: `Browse all posts in the ${category.title} category.`,
+    title: `${category.title} Posts | Lurnex`,
+    description: `Browse all posts in the ${category.title} category on Lurnex, the platform for innovative technology solutions and insights.`,
   };
 }
 

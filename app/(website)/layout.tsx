@@ -27,14 +27,14 @@ async function sharedMetaData(params) {
     title: {
       default:
         settings?.title ||
-        "Stablo - Blog Template for Next.js & Sanity CMS",
-      template: "%s | Stablo"
+        "Lurnex - Empowering businesses through innovative technology solutions",
+      template: "%s | Lurnex"
     },
     description:
       settings?.description ||
-      "Stablo - popular open-source next.js and sanity blog template",
+      "Lurnex - Empowering businesses through innovative technology solutions, insights, and resources for growth.",
     keywords: ["Next.js", "Sanity", "Tailwind CSS"],
-    authors: [{ name: "Surjith" }],
+    authors: [{ name: "Jameel Arif" }],
     canonical: settings?.url,
     openGraph: {
       images: [
@@ -48,7 +48,7 @@ async function sharedMetaData(params) {
       ]
     },
     twitter: {
-      title: settings?.title || "Stablo Template",
+      title: settings?.title || "Lurnex Blog",
       card: "summary_large_image"
     },
     robots: {

@@ -18,8 +18,8 @@ export async function generateMetadata({ params }) {
   }
 
   return {
-    title: `${author.name}'s Posts | Lurnex Blog`,
-    description: author.bio ? author.bio[0]?.children[0]?.text || '' : '',
+    title: `${author.name}'s Posts | Lurnex`,
+    description: `Read posts by ${author.name} on Lurnex, the platform for innovative technology solutions and insights.`,
   };
 }
 

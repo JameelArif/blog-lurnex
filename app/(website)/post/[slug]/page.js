@@ -8,7 +8,15 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const post = await getPostBySlug(params.slug);
-  return { title: post.title };
+  return {
+    title: `${post.title} | Lurnex`,
+    description: post.excerpt || 'Read this post on Lurnex, empowering businesses through innovative technology solutions.',
+    openGraph: {
+      title: `${post.title} | Lurnex`,
+      description: post.excerpt || 'Read this post on Lurnex, empowering businesses through innovative technology solutions.',
+      images: [`/post/${params.slug}/opengraph-image`],
+    },
+  };
 }
 
 export default async function PostDefault({ params }) {
