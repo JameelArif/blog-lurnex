@@ -4,10 +4,10 @@ import { getPostBySlug } from '@/lib/sanity/client';
 export const runtime = 'edge';
 
 const font = fetch(
-  new URL('/fonts/Inter-Bold.otf', import.meta.url)
+  'https://blog-lurnex-xi.vercel.app/fonts/Inter-Bold.otf'
 ).then(res => res.arrayBuffer());
 
-const logoUrl = 'https://blog.lurnex.net/logo.png'; 
+const logoUrl = 'https://blog-lurnex-xi.vercel.app/logo.png'; 
 
 export default async function handler(req, { params }) {
   const post = await getPostBySlug(params.slug);
