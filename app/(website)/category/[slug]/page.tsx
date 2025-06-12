@@ -36,6 +36,10 @@ export default async function CategoryPage({ params }) {
     notFound();
   }
 
+  const font = await fetch(
+    new URL('/public/fonts/Inter-Bold.otf', import.meta.url)
+  ).then(res => res.arrayBuffer());
+
   return (
     <div className="bg-white">
       {/* Category Hero Section */}
