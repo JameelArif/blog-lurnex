@@ -3,6 +3,7 @@ import Footer from "@/components/footerl";
 import { urlForImage } from "@/lib/sanity/image";
 import Navbar from "@/components/navbarlurnex";
 import { Inter, Merriweather } from 'next/font/google'
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -65,13 +66,17 @@ export async function generateMetadata({ params }) {
 export default async function Layout({ children, params }) {
   const settings = await getSettings();
   return (
-    <>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="light"
+      enableSystem={false}
+    >
       <Navbar {...settings} />
 
       {children}
 
       <Footer {...settings} />
-    </>
+    </ThemeProvider>
   );
 }
 // enable revalidate for all pages in this layout
