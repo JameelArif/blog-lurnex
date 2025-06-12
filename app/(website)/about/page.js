@@ -95,12 +95,13 @@ export default function AboutPage() {
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-                <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden">
+                <div className="relative w-32 h-32 md:w-48 md:h-48">
                   <Image
                     src="/img/team/member1.jpg"
                     alt="Team Member"
-                    fill
-                    className="object-cover"
+                    width={192}
+                    height={192}
+                    className="rounded-full object-cover"
                   />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white text-center mb-2">
