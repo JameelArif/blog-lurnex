@@ -1,17 +1,17 @@
 import { ImageResponse } from '@vercel/og';
 import { getPostBySlug } from '@/lib/sanity/client';
-import fs from 'fs';
-import path from 'path';
 
 export const runtime = 'edge';
 
-const fontPath = path.resolve(process.cwd(), 'public/fonts/Inter-Bold.otf');
-const fontData = fs.readFileSync(fontPath);
+const font = fetch(
+  new URL('/fonts/Inter-Bold.otf', import.meta.url)
+).then(res => res.arrayBuffer());
 
 const logoUrl = 'https://blog.lurnex.net/logo.png'; 
 
 export default async function handler(req, { params }) {
   const post = await getPostBySlug(params.slug);
+  const fontData = await font;
   if (!post) {
     return new ImageResponse(
       <div tw="w-full h-full flex items-center justify-center bg-white text-3xl font-bold text-gray-800">Post Not Found</div>,
