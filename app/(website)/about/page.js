@@ -97,7 +97,7 @@ export default function AboutPage() {
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
                 <div className="relative w-32 h-32 md:w-48 md:h-48">
                   <Image
-                    src="/img/team/member1.jpg"
+                    src="/img/team/Andy.png"
                     alt="Team Member"
                     width={192}
                     height={192}
@@ -105,13 +105,13 @@ export default function AboutPage() {
                   />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white text-center mb-2">
-                  John Doe
+                  Andy
                 </h3>
                 <p className="text-blue-600 dark:text-blue-400 text-center mb-2">
                   CEO & Founder
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 text-center">
-                  Visionary leader with over 15 years of experience in technology and business development.
+                  Visionary leader with years of experience in technology and business development.
                 </p>
               </div>
               {/* Add more team members as needed */}

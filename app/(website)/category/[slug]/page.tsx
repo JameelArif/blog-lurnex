@@ -4,6 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PostList from "@/components/postlist";
+import localFont from 'next/font/local';
+
+const interBold = localFont({
+  src: '../../../../public/fonts/Inter-Bold.otf',
+  variable: '--font-inter-bold',
+});
 
 export const revalidate = 60;
 
@@ -36,17 +42,13 @@ export default async function CategoryPage({ params }) {
     notFound();
   }
 
-  const font = await fetch(
-    new URL('/public/fonts/Inter-Bold.otf', import.meta.url)
-  ).then(res => res.arrayBuffer());
-
   return (
     <div className="bg-white">
       {/* Category Hero Section */}
       <div className="relative bg-lurnex-blue py-24">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 className={`text-4xl md:text-5xl font-bold text-white mb-4 ${interBold.variable}`}>
               {category.title}
             </h1>
             <p className="text-lg text-blue-100">
