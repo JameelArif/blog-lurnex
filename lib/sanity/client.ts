@@ -1,34 +1,22 @@
-import { apiVersion, dataset, projectId, useCdn } from "./config";
-import {
-  postquery,
-  limitquery,
-  paginatedquery,
-  configQuery,
-  singlequery,
-  pathquery,
-  allauthorsquery,
-  authorsquery,
-  postsbyauthorquery,
-  postsbycatquery,
-  catpathquery,
-  catquery,
-  getAll,
-  searchquery
-} from "./groq";
 import { createClient } from "next-sanity";
+import imageUrlBuilder from "@sanity/image-url";
 
-if (!projectId) {
-  console.error(
-    "The Sanity Project ID is not set. Check your environment variables."
-  );
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+const apiVersion = "2024-03-19";
+
+export const client = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: true,
+});
+
+const builder = imageUrlBuilder(client);
+
+export function urlFor(source) {
+  return builder.image(source);
 }
-
-/**
- * Checks if it's safe to create a client instance, as `@sanity/client` will throw an error if `projectId` is false
- */
-const client = projectId
-  ? createClient({ projectId, dataset, apiVersion, useCdn })
-  : null;
 
 export const fetcher = async ([query, params]) => {
   return client ? client.fetch(query, params) : [];
@@ -36,7 +24,23 @@ export const fetcher = async ([query, params]) => {
 
 (async () => {
   if (client) {
-    const data = await client.fetch(getAll);
+    const data = await client.fetch(`*[_type == "post"] | order(publishedAt desc) {
+      _id,
+      title,
+      slug,
+      mainImage,
+      publishedAt,
+      excerpt,
+      categories[]->{
+        title,
+        slug
+      },
+      author->{
+        name,
+        slug,
+        image
+      }
+    }`);
     if (!data || !data.length) {
       console.error(
         "Sanity returns empty array. Are you sure the dataset is public?"
@@ -46,88 +50,165 @@ export const fetcher = async ([query, params]) => {
 })();
 
 export async function getAllPosts() {
-  if (client) {
-    return (await client.fetch(postquery)) || [];
-  }
-  return [];
+  return client.fetch(`*[_type == "post"] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    mainImage,
+    publishedAt,
+    excerpt,
+    categories[]->{
+      title,
+      slug
+    },
+    author->{
+      name,
+      slug,
+      image
+    }
+  }`);
 }
 
 export async function getSettings() {
-  if (client) {
-    return (await client.fetch(configQuery)) || [];
-  }
-  return [];
+  return client.fetch(`*[_type == "config"] {
+    _id,
+    title,
+    description,
+    keywords,
+    author,
+    image
+  }`);
 }
 
 export async function getPostBySlug(slug) {
-  if (client) {
-    return (await client.fetch(singlequery, { slug })) || {};
-  }
-  return {};
+  return client.fetch(`*[_type == "post" && slug.current == "${slug}"] {
+    _id,
+    title,
+    slug,
+    mainImage,
+    publishedAt,
+    excerpt,
+    categories[]->{
+      title,
+      slug
+    },
+    author->{
+      name,
+      slug,
+      image
+    }
+  }`);
 }
 
 export async function getAllPostsSlugs() {
-  if (client) {
-    const slugs = (await client.fetch(pathquery)) || [];
-    return slugs.map(slug => ({ slug }));
-  }
-  return [];
+  return client.fetch(`*[_type == "post"] {
+    _id,
+    slug
+  }`);
 }
+
 // Author
 export async function getAllAuthorsSlugs() {
-  if (client) {
-    const slugs = (await client.fetch(authorsquery)) || [];
-    return slugs.map(slug => ({ author: slug }));
-  }
-  return [];
+  return client.fetch(`*[_type == "author"] {
+    _id,
+    slug
+  }`);
 }
 
 export async function getAuthorPostsBySlug(slug) {
-  if (client) {
-    return (await client.fetch(postsbyauthorquery, { slug })) || {};
-  }
-  return {};
+  return client.fetch(`{
+    "author": *[_type == "author" && slug.current == $slug][0] {
+      _id,
+      name,
+      slug,
+      image,
+      bio,
+      socialLinks
+    },
+    "posts": *[_type == "post" && author->slug.current == $slug] | order(publishedAt desc) {
+      _id,
+      title,
+      slug,
+      mainImage,
+      publishedAt,
+      excerpt,
+      categories[]->{
+        title,
+        slug
+      },
+      author->{
+        name,
+        slug,
+        image
+      }
+    }
+  }`, { slug });
 }
 
 export async function getAllAuthors() {
-  if (client) {
-    return (await client.fetch(allauthorsquery)) || [];
-  }
-  return [];
+  return client.fetch(`*[_type == "author"] {
+    _id,
+    name,
+    slug,
+    image,
+    bio
+  }`);
 }
 
 // Category
 
 export async function getAllCategories() {
-  if (client) {
-    const slugs = (await client.fetch(catpathquery)) || [];
-    return slugs.map(slug => ({ category: slug }));
-  }
-  return [];
+  return client.fetch(`*[_type == "category"] {
+    _id,
+    title,
+    slug
+  }`);
 }
 
 export async function getPostsByCategory(slug) {
-  if (client) {
-    return (await client.fetch(postsbycatquery, { slug })) || {};
-  }
-  return {};
+  return client.fetch(`*[_type == "post" && $slug in categories[]->slug.current] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    mainImage,
+    publishedAt,
+    excerpt,
+    categories[]->{
+      title,
+      slug
+    },
+    author->{
+      name,
+      slug,
+      image
+    }
+  }`, { slug });
 }
 
 export async function getTopCategories() {
-  if (client) {
-    return (await client.fetch(catquery)) || [];
-  }
-  return [];
+  return client.fetch(`*[_type == "category"] {
+    _id,
+    title,
+    slug
+  }`);
 }
 
 export async function getPaginatedPosts({ limit, pageIndex = 0 }) {
-  if (client) {
-    return (
-      (await client.fetch(paginatedquery, {
-        pageIndex: pageIndex,
-        limit: limit
-      })) || []
-    );
-  }
-  return [];
+  return client.fetch(`*[_type == "post"] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    mainImage,
+    publishedAt,
+    excerpt,
+    categories[]->{
+      title,
+      slug
+    },
+    author->{
+      name,
+      slug,
+      image
+    }
+  } | [${pageIndex} * ${limit}...${(pageIndex + 1) * limit}]`);
 }

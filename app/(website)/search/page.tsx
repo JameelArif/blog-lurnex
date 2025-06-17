@@ -3,6 +3,8 @@ import PostList from "@/components/postlist";
 import Link from "next/link";
 import { PortableText } from "@portabletext/react";
 import { urlForImage } from "@/lib/sanity/image";
+import { searchquery } from "@/lib/sanity/groq";
+import { client } from "@/lib/sanity/client";
 
 export const revalidate = 60;
 
@@ -22,21 +24,10 @@ function plainTextFromPortableText(body) {
 export default async function SearchPage({ searchParams }) {
   const query = (searchParams.q || '').toLowerCase();
   const [posts, authors, categories] = await Promise.all([
-    getAllPosts(),
+    query ? client.fetch(searchquery, { query }) : getAllPosts(),
     getAllAuthors(),
     getAllCategories(),
   ]);
-
-  // Filter posts
-  const filteredPosts = posts.filter(post => {
-    const searchContent = `
-      ${post.title}
-      ${post.excerpt}
-      ${(post.categories || []).map(cat => cat.title).join(' ')}
-      ${plainTextFromPortableText(post.body)}
-    `.toLowerCase();
-    return searchContent.includes(query);
-  });
 
   // Filter authors
   const filteredAuthors = authors.filter(author =>
@@ -58,7 +49,7 @@ export default async function SearchPage({ searchParams }) {
               {query ? `Search Results for "${query}"` : 'Search'}
             </h1>
             <p className="text-lg text-blue-100">
-              {filteredPosts.length + filteredAuthors.length + filteredCategories.length} result{filteredPosts.length + filteredAuthors.length + filteredCategories.length === 1 ? '' : 's'} found
+              {posts.length + filteredAuthors.length + filteredCategories.length} result{posts.length + filteredAuthors.length + filteredCategories.length === 1 ? '' : 's'} found
             </p>
           </div>
         </div>
@@ -70,9 +61,9 @@ export default async function SearchPage({ searchParams }) {
             {/* Posts Results */}
             <div>
               <h2 className="text-2xl font-bold mb-6">Posts</h2>
-              {filteredPosts.length > 0 ? (
+              {posts.length > 0 ? (
                 <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
-                  {filteredPosts.map((post) => (
+                  {posts.map((post) => (
                     <PostList
                       key={post._id}
                       post={post}
@@ -104,7 +95,7 @@ export default async function SearchPage({ searchParams }) {
                         )}
                         <h3 className="text-lg font-semibold mb-1">{author.name}</h3>
                         {author.bio && <div className="text-gray-600 text-sm mb-2"><PortableText value={author.bio} /></div>}
-                        <Link href={`/author/${author.slug}`} className="text-lurnex-blue font-medium hover:underline">View Profile</Link>
+                        <Link href={`/author/${author.slug.current}`} className="text-lurnex-blue font-medium hover:underline">View Profile</Link>
                       </div>
                     );
                   })}
