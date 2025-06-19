@@ -1,5 +1,7 @@
 import PostPage from "./default";
 import { client } from "@/lib/sanity/client";
+import Comments from "@/components/blog/comments";
+import CommentForm from "@/components/blog/commentForm";
 
 export async function generateStaticParams() {
   const posts = await client.fetch(`*[_type == "post"] {
@@ -56,31 +58,49 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function Post({ params }) {
-  const post = await client.fetch(`*[_type == "post" && slug.current == $slug][0] {
-    _id,
-    title,
-    slug,
-    mainImage,
-    publishedAt,
-    excerpt,
-    body,
-    categories[]->{
+  const [post, comments] = await Promise.all([
+    client.fetch(`*[_type == "post" && slug.current == $slug][0] {
+      _id,
       title,
-      slug
-    },
-    author->{
-      name,
       slug,
-      image,
-      bio
-    }
-  }`, { slug: params.slug });
+      mainImage,
+      publishedAt,
+      excerpt,
+      body,
+      categories[]->{
+        title,
+        slug
+      },
+      author->{
+        name,
+        slug,
+        image,
+        bio
+      }
+    }`, { slug: params.slug }),
+    client.fetch(`*[_type == "comment" && post->slug.current == $slug && approved == true] | order(createdAt desc) {
+      _id,
+      name,
+      content,
+      createdAt
+    }`, { slug: params.slug })
+  ]);
 
   if (!post) {
     return null;
   }
 
-  return <PostPage post={post} />;
+  return (
+    <>
+      <PostPage post={post} />
+      <div className="container mx-auto px-4 lg:px-8 py-12">
+        <div className="max-w-4xl mx-auto">
+          <Comments comments={comments} />
+          <CommentForm postId={post._id} />
+        </div>
+      </div>
+    </>
+  );
 }
 
 export const revalidate = 60;

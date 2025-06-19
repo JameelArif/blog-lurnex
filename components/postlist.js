@@ -20,6 +20,8 @@ export default function PostList({
   const AuthorimageProps = post?.author?.image ? urlForImage(post.author.image) : null;
   const authorSlug = post?.author?.slug?.current;
 
+  console.log('POST DATA:', post);
+
   return (
     <div className={cx("group cursor-pointer", minimal && "grid gap-10 md:grid-cols-2")}>
       <div className={cx("overflow-hidden rounded-md bg-gray-100 transition-all hover:scale-105 dark:bg-gray-800")}>
@@ -144,6 +146,8 @@ export default function PostList({
   const AuthorimageProps = post?.author?.image ? urlForImage(post.author.image) : null;
   const authorSlug = post?.author?.slug?.current;
 
+ 
+
   return (
 
     
@@ -221,8 +225,43 @@ export default function PostList({
             {format(parseISO(post?.publishedAt || post._createdAt), "MMMM dd, yyyy")}
           </time>
         </div>
+
+        <div className="flex justify-left gap-4 mt-4">
+          {[post.sector, post.character, post.topic].map((item, idx) => (
+            item && (
+              <a
+                key={idx}
+                href={`/${item.label ? item.label.toLowerCase() : '#'}`}
+                title={item.label}
+                className="group flex flex-col items-center transition-transform hover:scale-110"
+                style={{ minWidth: 48 }}
+              >
+                {item.iconUrl && (
+                  <img
+                    src={item.iconUrl}
+                    alt={item.label}
+                    className="w-8 h-8 rounded-full shadow-md border border-gray-200 bg-white group-hover:border-blue-400 transition"
+                    style={{ objectFit: 'contain' }}
+                  />
+                )}
+                {/* <span className="text-xs mt-1 text-gray-600 group-hover:text-blue-600">{item.label}</span> */}
+              </a>
+            )
+          ))}
+        </div>
       </div>
+
+
+
+
+
+
+
+
     </div>
+
+
+
   );
 }
 

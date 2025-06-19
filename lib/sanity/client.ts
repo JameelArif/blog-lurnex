@@ -65,6 +65,18 @@ export async function getAllPosts() {
       name,
       slug,
       image
+    },
+    sector->{
+      label,
+      "iconUrl": icon.asset->url
+    },
+    character->{
+      label,
+      "iconUrl": icon.asset->url
+    },
+    topic->{
+      label,
+      "iconUrl": icon.asset->url
     }
   }`);
 }
