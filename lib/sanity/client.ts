@@ -68,15 +68,18 @@ export async function getAllPosts() {
     },
     sector->{
       label,
-      "iconUrl": icon.asset->url
+      "iconUrl": icon.asset->url,
+      "slug": slug.current
     },
     character->{
       label,
-      "iconUrl": icon.asset->url
+      "iconUrl": icon.asset->url,
+      "slug": slug.current
     },
     topic->{
       label,
-      "iconUrl": icon.asset->url
+      "iconUrl": icon.asset->url,
+      "slug": slug.current
     }
   }`);
 }

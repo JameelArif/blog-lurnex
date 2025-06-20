@@ -3,7 +3,7 @@ import Link from "next/link";
 import { cx } from "@/utils/all";
 import { urlForImage } from "@/lib/sanity/image";
 import { parseISO, format } from "date-fns";
-import { PhotoIcon } from "@heroicons/react/24/outline";
+import { PhotoIcon, BuildingOffice2Icon, UserGroupIcon, TagIcon } from "@heroicons/react/24/outline";
 import CategoryLabel from "@/components/blog/category";
 
 export default function PostAlt({
@@ -89,6 +89,29 @@ export default function PostAlt({
               </span>
             </Link>
           </h2>
+          
+          <div className="flex justify-left gap-4 mt-4">
+            {[post.sector, post.character, post.topic].map((item, idx) => (
+              item && (
+                <Link
+                  key={idx}
+                  href={`/${item.slug}`}
+                  title={item.label}
+                  className="group flex flex-col items-center transition-transform hover:scale-110"
+                  style={{ minWidth: 48 }}
+                >
+                  {item.iconUrl && (
+                    <img
+                      src={item.iconUrl}
+                      alt={item.label}
+                      className="w-8 h-8 rounded-full shadow-md border border-gray-200 bg-white group-hover:border-blue-400 transition"
+                      style={{ objectFit: 'contain' }}
+                    />
+                  )}
+                </Link>
+              )
+            ))}
+          </div>
         </div>
       </div>
     </>
