@@ -19,7 +19,6 @@ export default function PostList({
   const imageProps = post?.mainImage ? urlForImage(post.mainImage) : null;
   const AuthorimageProps = post?.author?.image ? urlForImage(post.author.image) : null;
   const authorSlug = post?.author?.slug?.current;
-  console.log(post);
   return (
 
     

@@ -17,7 +17,6 @@ import { table } from "@sanity/table";
 import { codeInput } from "@sanity/code-input";
 
 export const PREVIEWABLE_DOCUMENT_TYPES: string[] = ["post"];
-console.log(projectId);
 
 export default defineConfig({
   name: "default",
@@ -29,7 +28,7 @@ export default defineConfig({
   plugins: [
     deskTool({
       structure: pageStructure([settings])
-      // `defaultDocumentNode` is responsible for adding a “Preview” tab to the document pane
+      // `defaultDocumentNode` is responsible for adding a "Preview" tab to the document pane
       // defaultDocumentNode: previewDocumentNode({ apiVersion, previewSecretId }),
     }),
     singletonPlugin(["settings"]),

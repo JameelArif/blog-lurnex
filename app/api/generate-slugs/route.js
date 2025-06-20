@@ -22,8 +22,6 @@ function generateSlug(label) {
 
 export async function POST() {
   try {
-    console.log('Starting slug generation...')
-
     // Get all sectors without slugs
     const sectors = await client.fetch(`
       *[_type == "sector" && !defined(slug.current)] {
@@ -47,10 +45,6 @@ export async function POST() {
         label
       }
     `)
-
-    console.log(`Found ${sectors.length} sectors without slugs`)
-    console.log(`Found ${characters.length} characters without slugs`)
-    console.log(`Found ${topics.length} topics without slugs`)
 
     const results = []
 
@@ -90,8 +84,6 @@ export async function POST() {
       results.push(`Updated topic "${topic.label}" with slug: ${slug}`)
     }
 
-    console.log('All documents updated successfully!')
-    
     return NextResponse.json({
       success: true,
       message: 'All documents updated successfully!',
@@ -104,7 +96,6 @@ export async function POST() {
     })
 
   } catch (error) {
-    console.error('Error updating documents:', error)
     return NextResponse.json({
       success: false,
       error: error.message
