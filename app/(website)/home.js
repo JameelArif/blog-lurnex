@@ -49,6 +49,7 @@ export default function HomePage({ posts, selectedCategory }) {
             <Link
               key={category}
               href={category === "All Posts" ? "/" : `/?category=${encodeURIComponent(category)}`}
+              scroll={false}
               className={`
                 px-2 py-1
                 sm:px-3 sm:py-1.5
