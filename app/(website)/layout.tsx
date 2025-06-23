@@ -3,6 +3,7 @@ import Footer from "@/components/footerl";
 import { urlForImage } from "@/lib/sanity/image";
 import Navbar from "@/components/navbarlurnex";
 import { Inter, Merriweather } from 'next/font/google'
+import { GoogleTagManagerNoScript } from "@/components/GoogleTagManager";
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -66,6 +67,7 @@ export default async function Layout({ children, params }) {
   const settings = await getSettings();
   return (
     <>
+      <GoogleTagManagerNoScript />
       <Navbar {...settings} />
 
       {children}
