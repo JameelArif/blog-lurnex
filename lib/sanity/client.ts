@@ -227,3 +227,15 @@ export async function getPaginatedPosts({ limit, pageIndex = 0 }) {
     }
   } | [${pageIndex} * ${limit}...${(pageIndex + 1) * limit}]`);
 }
+
+export async function getAllSectors() {
+  return client.fetch(`*[_type == "sector"]{ _id, label, slug, icon, "iconUrl": icon.asset->url }`);
+}
+
+export async function getAllCharacters() {
+  return client.fetch(`*[_type == "character"]{ _id, label, slug, icon, "iconUrl": icon.asset->url }`);
+}
+
+export async function getAllTopics() {
+  return client.fetch(`*[_type == "topic"]{ _id, label, slug, icon, "iconUrl": icon.asset->url }`);
+}
