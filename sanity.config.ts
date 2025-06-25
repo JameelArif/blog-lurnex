@@ -16,6 +16,10 @@ import { unsplashImageAsset } from "sanity-plugin-asset-source-unsplash";
 import { table } from "@sanity/table";
 import { codeInput } from "@sanity/code-input";
 
+// Import your logo
+import Logo from './components/Logo'
+
+
 export const PREVIEWABLE_DOCUMENT_TYPES: string[] = ["post"];
 
 export default defineConfig({
@@ -24,6 +28,11 @@ export default defineConfig({
   basePath: "/studio",
   projectId: projectId,
   dataset: dataset,
+  studio: {
+    components: {
+      logo: Logo
+    }
+  },
 
   plugins: [
     deskTool({
