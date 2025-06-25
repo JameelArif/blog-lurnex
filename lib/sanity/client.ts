@@ -229,7 +229,18 @@ export async function getPaginatedPosts({ limit, pageIndex = 0 }) {
 }
 
 export async function getAllSectors() {
-  return client.fetch(`*[_type == "sector"]{ _id, label, slug, icon, "iconUrl": icon.asset->url }`);
+  return client.fetch(`*[_type == "sector"]{
+    _id,
+    label,
+    slug,
+    description,
+    blockImage,
+    heroImage,
+    icon,
+    "blockImageUrl": blockImage.asset->url,
+    "heroImageUrl": heroImage.asset->url,
+    "iconUrl": icon.asset->url
+  }`);
 }
 
 export async function getAllCharacters() {
