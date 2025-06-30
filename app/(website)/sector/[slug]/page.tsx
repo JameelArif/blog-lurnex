@@ -43,7 +43,10 @@ export async function generateStaticParams() {
 
 export default async function SectorPage({ params, searchParams }: { params: Params, searchParams?: SearchParams }) {
   const sector = await client.fetch(
-    `*[_type == "sector" && slug.current == $slug][0]`,
+    `*[_type == "sector" && slug.current == $slug][0]{
+      ...,
+      "heroImageUrl": heroImage.asset->url
+    }`,
     { slug: params.slug }
   );
 
@@ -129,9 +132,14 @@ export default async function SectorPage({ params, searchParams }: { params: Par
       <section aria-label="Posts in this sector" className="py-16">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center tracking-tight">
-              {sector.label} Posts
-            </h2>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+                Fresh Blog Posts
+              </h2>
+              <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-500">
+                Stay updated with our latest insights and discoveries in the {sector.label} sector.
+              </p>
+            </div>
             <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
               {paginatedPosts.map((post: any) => (
                 <PostList

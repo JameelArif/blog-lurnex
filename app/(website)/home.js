@@ -10,17 +10,16 @@ export default function HomePage({ posts, sectors }) {
   return (
     <>
       {/* Hero Banner */}
-      <div className="relative w-full h-48 md:h-[32vh] lg:h-[40vh] xl:h-[48vh] 2xl:h-[56vh] shadow-lg bg-[#2DA9E1] overflow-hidden">
-        <img
-          src="/img/top.png"
-          alt="Banner"
-          className="object-cover w-full h-full shadow-lg"
-        />
-        <div className="absolute inset-0 flex items-center justify-start pl-8 md:pl-16">
-          <h1 className="text-white drop-shadow-2xl md:leading-tight text-4xl md:text-5xl font-extrabold">
-            <span className="drop-shadow-2xl">Discover our</span>
-            <div className="drop-shadow-2xl">stories and insights</div>
-          </h1>
+      <div className="relative w-full h-64 md:h-80 lg:h-96 bg-cover bg-center shadow-lg bg-[#2DA9E1]" style={{backgroundImage: "url('/img/top.png')"}}>
+        <div className="absolute inset-0 bg-black bg-opacity-20" />
+        <div className="relative h-full flex flex-col justify-center items-start px-8 md:px-16 lg:px-24">
+          <div className="max-w-xl">
+            <h1 className="text-white drop-shadow-2xl text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
+              Discover our
+              <br className="hidden md:block" />
+              <span className="text-white"> stories and insights</span>
+            </h1>
+          </div>
         </div>
       </div>
 

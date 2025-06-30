@@ -23,7 +23,7 @@ export default function PostList({
 
     
 
-        <div className="bg-white hover:bg-[#f3faff]  rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden p-6 max-w-sm transition-all hover:scale-105">
+        <div className="bg-white hover:bg-[#f3faff]  rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden p-6 max-w-sm transition-all duration-300 hover:scale-105">
             <Link href={`/post/${pathPrefix ? `${pathPrefix}/` : ""}${post?.slug?.current || ""}`}>
               <div className="w-full h-[190px] relative rounded-lg overflow-hidden mb-3">
                 {imageProps ? (
@@ -56,7 +56,7 @@ export default function PostList({
             <Link
               key={index}
               href={`/category/${cat.slug?.current || ""}`}
-              className="inline-flex items-center justify-center font-medium px-1.5 py-0.5 text-[9px] bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-full transition-all duration-200 sm:text-[10px] md:text-[11px] lg:text-xs"
+              className="inline-flex items-center justify-center font-medium px-1.5 py-0.5 text-[9px] bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-full transition-all duration-300 sm:text-[10px] md:text-[11px] lg:text-xs"
             >
               {cat.title}
             </Link>
