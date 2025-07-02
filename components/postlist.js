@@ -64,14 +64,14 @@ export default function PostList({
         </div>
 
         {/* Title */}
-        <h2 className="text-lg font-semibold text-gray-900 leading-snug mb-2">
+        <h2 className="text-lg font-semibold text-gray-900 leading-snug mb-2 line-clamp-1">
           <Link href={`/post/${pathPrefix ? `${pathPrefix}/` : ""}${post?.slug?.current || ""}`}>
             {post.title}
           </Link>
         </h2>
 
         {/* Excerpt */}
-        <p className="text-sm text-gray-700 line-clamp-3 mb-3">
+        <p className="text-sm text-gray-700 line-clamp-1 mb-3">
           {post.excerpt || "No description available."}
         </p>
 
