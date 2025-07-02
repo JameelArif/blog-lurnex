@@ -34,6 +34,8 @@ export default function HomePage({ posts, sectors }) {
         </div>
       </div>
 
+      
+
       {/* Sectors Section (new grid) */}
       <SectorList sectors={sectors} />
 
