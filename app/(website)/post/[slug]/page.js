@@ -36,6 +36,10 @@ export async function generateMetadata({ params }) {
     seo
   } = post;
 
+  // Defensive date handling
+  const publishedDate = publishedAt ? new Date(publishedAt) : null;
+  const publishedIso = publishedDate && !isNaN(publishedDate) ? publishedDate.toISOString() : undefined;
+
   const seoTitle = seo?.title || title;
   const seoDesc = seo?.description || description;
   const seoImage = seo?.image ? urlForImage(seo.image) : urlForImage(mainImage);
@@ -50,7 +54,7 @@ export async function generateMetadata({ params }) {
       description: seoDesc,
       type: "article",
       article: {
-        publishedTime: publishedAt,
+        publishedTime: publishedIso,
         authors: [authorName]
       },
       images: [
@@ -115,12 +119,16 @@ export default async function Post({ params }) {
     return null;
   }
 
+  // Defensive date handling
+  const publishedDate = post.publishedAt ? new Date(post.publishedAt) : null;
+  const publishedIso = publishedDate && !isNaN(publishedDate) ? publishedDate.toISOString() : undefined;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": post.title,
     "image": urlForImage(post.mainImage).src,
-    "datePublished": post.publishedAt,
+    "datePublished": publishedIso,
     "author": {
       "@type": "Person",
       "name": post.author.name,
