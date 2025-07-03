@@ -1,5 +1,6 @@
 import { createClient } from "next-sanity";
 import imageUrlBuilder from "@sanity/image-url";
+import { cache } from "react";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
@@ -180,25 +181,16 @@ export async function getAllCategories() {
   }`);
 }
 
-export async function getPostsByCategory(slug) {
-  return client.fetch(`*[_type == "post" && $slug in categories[]->slug.current] | order(publishedAt desc) {
-    _id,
-    title,
-    slug,
-    mainImage,
-    publishedAt,
-    excerpt,
-    categories[]->{
-      title,
-      slug
-    },
-    author->{
-      name,
-      slug,
-      image
-    }
-  }`, { slug });
-}
+export const getPostsByCategory = cache(async (slug: string) => {
+  return client.fetch<Post[]>(postsByCategoryQuery, { slug });
+});
+
+export const getCategory = cache(async (slug: string) => {
+  return client.fetch<Category>(
+    `*[_type == "category" && slug.current == $slug][0]`,
+    { slug }
+  );
+});
 
 export async function getTopCategories() {
   return client.fetch(`*[_type == "category"] {

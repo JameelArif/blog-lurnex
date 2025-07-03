@@ -23,13 +23,12 @@ async function sharedMetaData(params) {
   const settings = await getSettings();
 
   return {
-    // enable this for resolving opengraph image
-    // metadataBase: new URL(settings.url),
+    metadataBase: settings.url ? new URL(settings.url) : undefined,
     title: {
       default:
         settings?.title ||
         "Lurnex - Empowering businesses through innovative technology solutions",
-      template: "%s | Lurnex"
+      template: `%s | ${settings?.title || "Lurnex"}`
     },
     description:
       settings?.description ||
@@ -38,6 +37,9 @@ async function sharedMetaData(params) {
     authors: [{ name: "Jameel Arif" }],
     canonical: settings?.url,
     openGraph: {
+      url: settings.url,
+      siteName: settings.title,
+      type: "website",
       images: [
         {
           url:
@@ -50,7 +52,9 @@ async function sharedMetaData(params) {
     },
     twitter: {
       title: settings?.title || "Lurnex Blog",
-      card: "summary_large_image"
+      card: "summary_large_image",
+      site: `@${settings?.twitter}`,
+      creator: `@${settings?.twitter}`
     },
     robots: {
       index: true,

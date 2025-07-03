@@ -1,5 +1,5 @@
 import { urlForImage } from "@/lib/sanity/image";
-import { client } from "@/lib/sanity/client";
+import { client, getSettings } from "@/lib/sanity/client";
 import PostList from "@/components/postlist";
 import { notFound } from "next/navigation";
 import localFont from 'next/font/local';
@@ -16,21 +16,52 @@ type Params = { slug: string };
 type SearchParams = { page?: string };
 
 export async function generateMetadata({ params }: { params: Params }) {
+  const { slug } = params;
+  const settings = await getSettings();
   const sector = await client.fetch(
     `*[_type == "sector" && slug.current == $slug][0]`,
-    { slug: params.slug }
+    { slug }
   );
 
   if (!sector) {
     return {
-      title: 'Sector Not Found | Lurnex Blog',
+      title: 'Sector Not Found',
       description: 'The requested sector could not be found.',
     };
   }
 
+  const { label, description, seo } = sector;
+  const seoTitle = seo?.title || label;
+  const seoDesc = seo?.description || description;
+  const seoImageSrc = seo?.image ? urlForImage(seo.image)?.src : urlForImage(settings.openGraphImage)?.src;
+
   return {
-    title: `${sector.label} Posts | Lurnex`,
-    description: `Browse all posts in the ${sector.label} sector on Lurnex, the platform for innovative technology solutions and insights.`,
+    title: seoTitle,
+    description: seoDesc,
+    canonical: `${settings.url}/sector/${slug}`,
+    openGraph: {
+      url: `${settings.url}/sector/${slug}`,
+      title: seoTitle,
+      description: seoDesc,
+      images: [
+        {
+          url: seoImageSrc || '/img/opengraph.jpg',
+          width: 800,
+          height: 600,
+          alt: seoTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description: seoDesc,
+      images: [seoImageSrc || '/img/opengraph.jpg'],
+    },
+    robots: {
+      index: !seo?.noindex,
+      follow: !seo?.noindex,
+    }
   };
 }
 

@@ -1,5 +1,5 @@
 import { urlForImage } from "@/lib/sanity/image";
-import { client } from "@/lib/sanity/client";
+import { client, getSettings } from "@/lib/sanity/client";
 import PostList from "@/components/postlist";
 import { notFound } from "next/navigation";
 import localFont from 'next/font/local';
@@ -12,21 +12,52 @@ const interBold = localFont({
 export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
+  const { slug } = params;
+  const settings = await getSettings();
   const topic = await client.fetch(
     `*[_type == "topic" && slug.current == $slug][0]`,
-    { slug: params.slug }
+    { slug }
   );
 
   if (!topic) {
     return {
-      title: 'Topic Not Found | Lurnex Blog',
+      title: 'Topic Not Found',
       description: 'The requested topic could not be found.',
     };
   }
 
+  const { label, seo } = topic;
+  const seoTitle = seo?.title || label;
+  const seoDesc = seo?.description || `Browse posts in the ${label} topic.`;
+  const seoImageSrc = seo?.image ? urlForImage(seo.image)?.src : urlForImage(settings.openGraphImage)?.src;
+
   return {
-    title: `${topic.label} Posts | Lurnex`,
-    description: `Browse all posts in the ${topic.label} topic on Lurnex, the platform for innovative technology solutions and insights.`,
+    title: seoTitle,
+    description: seoDesc,
+    canonical: `${settings.url}/topic/${slug}`,
+    openGraph: {
+      url: `${settings.url}/topic/${slug}`,
+      title: seoTitle,
+      description: seoDesc,
+      images: [
+        {
+          url: seoImageSrc || '/img/opengraph.jpg',
+          width: 800,
+          height: 600,
+          alt: seoTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description: seoDesc,
+      images: [seoImageSrc || '/img/opengraph.jpg'],
+    },
+    robots: {
+      index: !seo?.noindex,
+      follow: !seo?.noindex,
+    }
   };
 }
 
@@ -95,7 +126,14 @@ export default async function TopicPage({ params }) {
           <div className="max-w-7xl mx-auto">
             <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
               {posts.map((post) => (
-                <PostList key={post._id} post={post} aspect="rectangle" />
+                <PostList 
+                  key={post._id} 
+                  post={post} 
+                  aspect="rectangle"
+                  minimal={false}
+                  pathPrefix="post"
+                  preloadImage={false}
+                />
               ))}
             </div>
           </div>

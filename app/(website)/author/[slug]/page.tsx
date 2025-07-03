@@ -1,3 +1,4 @@
+import { getSettings } from "@/lib/sanity/client";
 import { urlForImage } from "@/lib/sanity/image";
 import { getAuthor, getAuthorPosts } from "@/lib/sanity/queries";
 import Image from "next/image";
@@ -8,18 +9,49 @@ import { notFound } from "next/navigation";
 export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
-  const author = await getAuthor(params.slug);
+  const { slug } = params;
+  const settings = await getSettings();
+  const author = await getAuthor(slug);
   
   if (!author) {
     return {
-      title: 'Author Not Found | Lurnex Blog',
+      title: 'Author Not Found',
       description: 'The requested author could not be found.',
     };
   }
 
+  const { name, bio, image, seo } = author;
+  const seoTitle = seo?.title || name;
+  const seoDesc = seo?.description || bio?.[0]?.children?.[0]?.text; // Basic text extraction
+  const seoImage = seo?.image ? urlForImage(seo.image) : urlForImage(image);
+
   return {
-    title: `${author.name}'s Posts | Lurnex`,
-    description: `Read posts by ${author.name} on Lurnex, the platform for innovative technology solutions and insights.`,
+    title: seoTitle,
+    description: seoDesc,
+    canonical: `${settings.url}/author/${slug}`,
+    openGraph: {
+      url: `${settings.url}/author/${slug}`,
+      title: seoTitle,
+      description: seoDesc,
+      images: [
+        {
+          url: seoImage.src,
+          width: 800,
+          height: 600,
+          alt: seoTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description: seoDesc,
+      images: [seoImage.src],
+    },
+    robots: {
+      index: !seo?.noindex,
+      follow: !seo?.noindex,
+    }
   };
 }
 

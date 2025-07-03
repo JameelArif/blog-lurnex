@@ -1,5 +1,6 @@
+import { getSettings } from "@/lib/sanity/client";
 import { urlForImage } from "@/lib/sanity/image";
-import { getPostsByCategory } from "@/lib/sanity/client";
+import { getPostsByCategory, getCategory } from "@/lib/sanity/client";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -14,21 +15,50 @@ const interBold = localFont({
 export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
-  const posts = await getPostsByCategory(params.slug);
-  const category = posts.length > 0
-    ? posts[0].categories?.find(cat => cat.slug.current === params.slug)
-    : null;
+  const { slug } = params;
+  const settings = await getSettings();
+  const category = await getCategory(slug);
 
   if (!category) {
     return {
-      title: 'Category Not Found | Lurnex Blog',
-      description: 'The requested category could not be found.',
+      title: 'Category Not Found',
+      description: 'The requested category could not be found.'
     };
   }
+  
+  const { title, description, seo } = category;
+  const seoTitle = seo?.title || title;
+  const seoDesc = seo?.description || description;
+  const seoImageSrc = seo?.image ? urlForImage(seo.image)?.src : urlForImage(settings.openGraphImage)?.src;
+
 
   return {
-    title: `${category.title} Posts | Lurnex`,
-    description: `Browse all posts in the ${category.title} category on Lurnex, the platform for innovative technology solutions and insights.`,
+    title: seoTitle,
+    description: seoDesc,
+    canonical: `${settings.url}/category/${slug}`,
+    openGraph: {
+      url: `${settings.url}/category/${slug}`,
+      title: seoTitle,
+      description: seoDesc,
+      images: [
+        {
+          url: seoImageSrc || '/img/opengraph.jpg',
+          width: 800,
+          height: 600,
+          alt: seoTitle
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: seoTitle,
+      description: seoDesc,
+      images: [seoImageSrc || '/img/opengraph.jpg']
+    },
+    robots: {
+      index: !seo?.noindex,
+      follow: !seo?.noindex
+    }
   };
 }
 
@@ -64,7 +94,16 @@ export default async function CategoryPage({ params }) {
           <div className="max-w-7xl mx-auto">
             <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
               {posts.map((post) => (
-                <PostList key={post._id} post={post} aspect="rectangle" />
+                <PostList 
+                  key={post._id} 
+                  post={post} 
+                  aspect="rectangle" 
+                  minimal={false} 
+                  pathPrefix="post" 
+                  preloadImage={false}
+                  fontSize="large"
+                  fontWeight="bold"
+                />
               ))}
             </div>
           </div>
