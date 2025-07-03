@@ -155,6 +155,7 @@ export default async function AuthorPage({ params }) {
             <div className="grid gap-12">
               {posts.map((post) => {
                 const postImageUrl = post.mainImage ? urlForImage(post.mainImage) : null;
+                const dateString = post.publishedAt || post._createdAt;
                 return (
                   <article key={post._id} className="flex flex-col md:flex-row gap-8">
                     {/* Post Image */}
@@ -184,8 +185,8 @@ export default async function AuthorPage({ params }) {
                       )}
                       
                       <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <time dateTime={post.publishedAt}>
-                          {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                        <time dateTime={dateString}>
+                          {new Date(dateString).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
