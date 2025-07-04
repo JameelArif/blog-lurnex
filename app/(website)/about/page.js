@@ -124,7 +124,7 @@ export default function AboutPage() {
               Get in Touch
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
-              Ready to transform your business? Let's discuss how we can help you achieve your goals.
+              Ready to transform your business? Let&apos;s discuss how we can help you achieve your goals.
             </p>
             <a
               href="/contact"

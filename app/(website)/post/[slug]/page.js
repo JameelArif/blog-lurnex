@@ -38,7 +38,7 @@ export async function generateMetadata({ params }) {
 
   // Defensive date handling
   const publishedDate = publishedAt ? new Date(publishedAt) : null;
-  const publishedIso = publishedDate && !isNaN(publishedDate) ? publishedDate.toISOString() : undefined;
+  const publishedIso = publishedDate && !isNaN(publishedDate.getTime()) ? publishedDate.toISOString() : undefined;
 
   const seoTitle = seo?.title || title;
   const seoDesc = seo?.description || description;
@@ -121,7 +121,7 @@ export default async function Post({ params }) {
 
   // Defensive date handling
   const publishedDate = post.publishedAt ? new Date(post.publishedAt) : null;
-  const publishedIso = publishedDate && !isNaN(publishedDate) ? publishedDate.toISOString() : undefined;
+  const publishedIso = publishedDate && !isNaN(publishedDate.getTime()) ? publishedDate.toISOString() : undefined;
 
   const jsonLd = {
     "@context": "https://schema.org",

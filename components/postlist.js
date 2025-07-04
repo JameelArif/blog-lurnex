@@ -93,7 +93,17 @@ export default function PostList({
           )}
           <span>&bull;</span>
           <time dateTime={post?.publishedAt || post._createdAt}>
-            {format(parseISO(post?.publishedAt || post._createdAt), "MMMM dd, yyyy")}
+            {(() => {
+              try {
+                const dateString = post?.publishedAt || post._createdAt;
+                if (!dateString) return "Unknown date";
+                const date = parseISO(dateString);
+                if (isNaN(date.getTime())) return "Invalid date";
+                return format(date, "MMMM dd, yyyy");
+              } catch (error) {
+                return "Invalid date";
+              }
+            })()}
           </time>
         </div>
 

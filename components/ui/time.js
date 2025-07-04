@@ -4,7 +4,16 @@ import { cx } from "@/utils/all";
 export default function DateTime({ date, className }) {
   return (
     <time className={cx(className && className)} dateTime={date}>
-      {format(parseISO(date), "MMMM dd, yyyy")}
+      {(() => {
+        try {
+          if (!date) return "Unknown date";
+          const parsedDate = parseISO(date);
+          if (isNaN(parsedDate.getTime())) return "Invalid date";
+          return format(parsedDate, "MMMM dd, yyyy");
+        } catch (error) {
+          return "Invalid date";
+        }
+      })()}
     </time>
   );
 }

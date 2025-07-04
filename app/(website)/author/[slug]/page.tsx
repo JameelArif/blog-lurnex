@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
   const { name, bio, image, seo } = author;
   const seoTitle = seo?.title || name;
   const seoDesc = seo?.description || bio?.[0]?.children?.[0]?.text; // Basic text extraction
-  const seoImage = seo?.image ? urlForImage(seo.image) : urlForImage(image);
+  const seoImage = seo?.image ? urlForImage(seo.image) : (image ? urlForImage(image) : null);
 
   return {
     title: seoTitle,
@@ -33,20 +33,20 @@ export async function generateMetadata({ params }) {
       url: `${settings.url}/author/${slug}`,
       title: seoTitle,
       description: seoDesc,
-      images: [
+      images: seoImage ? [
         {
           url: seoImage.src,
           width: 800,
           height: 600,
           alt: seoTitle,
         },
-      ],
+      ] : [],
     },
     twitter: {
       card: 'summary_large_image',
       title: seoTitle,
       description: seoDesc,
-      images: [seoImage.src],
+      images: seoImage ? [seoImage.src] : [],
     },
     robots: {
       index: !seo?.noindex,
@@ -186,11 +186,20 @@ export default async function AuthorPage({ params }) {
                       
                       <div className="flex items-center gap-4 text-sm text-gray-500">
                         <time dateTime={dateString}>
-                          {new Date(dateString).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
+                          {(() => {
+                            try {
+                              if (!dateString) return "Unknown date";
+                              const date = new Date(dateString);
+                              if (isNaN(date.getTime())) return "Invalid date";
+                              return date.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                              });
+                            } catch (error) {
+                              return "Invalid date";
+                            }
+                          })()}
                         </time>
                         {post.categories && post.categories.length > 0 && (
                           <div className="flex gap-2">

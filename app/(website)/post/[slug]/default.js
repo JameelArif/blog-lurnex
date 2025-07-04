@@ -65,10 +65,17 @@ export default function Post(props) {
                   <time
                     className="text-gray-500 dark:text-gray-400"
                     dateTime={post?.publishedAt || post._createdAt}>
-                    {format(
-                      parseISO(post?.publishedAt || post._createdAt),
-                      "MMMM dd, yyyy"
-                    )}
+                    {(() => {
+                      try {
+                        const dateString = post?.publishedAt || post._createdAt;
+                        if (!dateString) return "Unknown date";
+                        const date = parseISO(dateString);
+                        if (isNaN(date.getTime())) return "Invalid date";
+                        return format(date, "MMMM dd, yyyy");
+                      } catch (error) {
+                        return "Invalid date";
+                      }
+                    })()}
                   </time>
                   <span>· {post.estReadingTime || "5"} min read</span>
                 </div>

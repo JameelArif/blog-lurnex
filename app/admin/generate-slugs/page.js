@@ -43,7 +43,7 @@ export default function GenerateSlugsPage() {
           </h1>
           
           <p className="text-gray-600 mb-6">
-            This will generate slugs for all sector, character, and topic documents that don't have slugs yet.
+            This will generate slugs for all sector, character, and topic documents that don&apos;t have slugs yet.
           </p>
 
           <button

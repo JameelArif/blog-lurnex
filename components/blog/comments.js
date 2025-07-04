@@ -19,7 +19,17 @@ export default function Comments({ comments }) {
             <div className="flex items-center justify-between mb-2">
               <div className="font-semibold text-gray-900">{comment.name}</div>
               <time className="text-sm text-gray-500">
-                {format(new Date(comment.createdAt), 'MMMM d, yyyy')}
+                {(() => {
+                  try {
+                    const dateString = comment._createdAt;
+                    if (!dateString) return "Unknown date";
+                    const date = new Date(dateString);
+                    if (isNaN(date.getTime())) return "Invalid date";
+                    return format(date, 'MMMM d, yyyy');
+                  } catch (error) {
+                    return "Invalid date";
+                  }
+                })()}
               </time>
             </div>
             <p className="text-gray-700 whitespace-pre-wrap">{comment.content}</p>
