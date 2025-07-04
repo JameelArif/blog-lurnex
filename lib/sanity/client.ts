@@ -1,6 +1,7 @@
 import { createClient } from "next-sanity";
 import imageUrlBuilder from "@sanity/image-url";
 import { cache } from "react";
+import { postsbycatquery } from "./groq";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
@@ -182,11 +183,11 @@ export async function getAllCategories() {
 }
 
 export const getPostsByCategory = cache(async (slug: string) => {
-  return client.fetch<Post[]>(postsByCategoryQuery, { slug });
+  return client.fetch(postsbycatquery, { slug });
 });
 
 export const getCategory = cache(async (slug: string) => {
-  return client.fetch<Category>(
+  return client.fetch(
     `*[_type == "category" && slug.current == $slug][0]`,
     { slug }
   );

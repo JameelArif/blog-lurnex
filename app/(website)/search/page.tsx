@@ -33,8 +33,8 @@ export default async function SearchPage({ searchParams }) {
   const query = (searchParams.q || '').toLowerCase();
 
   // Build dynamic GROQ filter
-  let filters = [];
-  let params = {};
+  let filters: string[] = [];
+  let params: Record<string, any> = {};
   if (selectedAuthor) {
     filters.push('author->slug.current == $author');
     params.author = selectedAuthor;

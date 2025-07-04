@@ -2,8 +2,14 @@
 User-agent: *
 Allow: /
 
+# *
+User-agent: *
+Disallow: /studio
+Disallow: /api
+
 # Host
-Host: https://stablo-pro.web3templates.com
+Host: https://lurnex.com
 
 # Sitemaps
-Sitemap: https://stablo-pro.web3templates.com/sitemap.xml
+Sitemap: https://lurnex.com/sitemap.xml
+Sitemap: https://lurnex.com/server-sitemap.xml
