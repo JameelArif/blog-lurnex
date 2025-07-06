@@ -9,6 +9,12 @@ import { parseISO, format } from "date-fns";
 import CategoryLabel from "@/components/blog/category";
 import AuthorCard from "@/components/blog/authorCard";
 
+// Helper to get author slug as string
+function getAuthorSlug(author) {
+  if (!author || !author.slug) return "";
+  return typeof author.slug === "string" ? author.slug : author.slug.current;
+}
+
 export default function Post(props) {
   const { loading, post } = props;
 
@@ -26,6 +32,8 @@ export default function Post(props) {
     ? urlForImage(post.author.image)
     : null;
 
+  const authorSlug = getAuthorSlug(post.author);
+
   return (
     <>
       <Container className="!pt-0">
@@ -42,7 +50,7 @@ export default function Post(props) {
             <div className="flex items-center gap-3">
               <div className="relative h-10 w-10 flex-shrink-0">
                 {AuthorimageProps && (
-                  <Link href={`/author/${post.author.slug.current}`}>
+                  <Link href={`/author/${authorSlug}`}>
                     <Image
                       src={AuthorimageProps.src}
                       alt={post?.author?.name}
@@ -54,9 +62,9 @@ export default function Post(props) {
                 )}
               </div>
               <div>
-                {post.author && post.author.slug && (
+                {post.author && authorSlug && (
                   <p className="text-gray-800 dark:text-gray-400">
-                    <Link href={`/author/${post.author.slug.current}`}>
+                    <Link href={`/author/${authorSlug}`}>
                       {post.author.name}
                     </Link>
                   </p>

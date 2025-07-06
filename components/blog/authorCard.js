@@ -3,14 +3,21 @@ import { PortableText } from "@/lib/sanity/plugins/portabletext";
 import { urlForImage } from "@/lib/sanity/image";
 import Link from "next/link";
 
+// Helper to get author slug as string
+function getAuthorSlug(author) {
+  if (!author || !author.slug) return "";
+  return typeof author.slug === "string" ? author.slug : author.slug.current;
+}
+
 export default function AuthorCard({ author }) {
   const imageProps = author?.image ? urlForImage(author.image) : null;
+  const authorSlug = getAuthorSlug(author);
   return (
     <div className="mt-3 rounded-2xl bg-gray-50 px-8 py-8 text-gray-500 dark:bg-gray-900 dark:text-gray-400">
       <div className="flex flex-wrap items-start sm:flex-nowrap sm:space-x-6">
         <div className="relative mt-1 h-24 w-24 flex-shrink-0 ">
           {imageProps && (
-            <Link href={`/author/${author.slug.current}`}>
+            <Link href={`/author/${authorSlug}`}>
               <Image
                 src={imageProps.src}
                 alt={author.name}
@@ -32,7 +39,7 @@ export default function AuthorCard({ author }) {
           </div>
           <div className="mt-3">
             <Link
-              href={`/author/${author.slug.current}`}
+              href={`/author/${authorSlug}`}
               className="bg-brand-secondary/20 rounded-full py-2 text-sm text-blue-600 dark:text-blue-500 ">
               View Profile
             </Link>

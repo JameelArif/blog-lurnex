@@ -139,7 +139,7 @@ export default async function SectorPage({ params, searchParams }: { params: Par
         )}
         <div className="relative z-20 flex flex-col items-center justify-center text-center px-4 py-16 md:py-24" style={{ minHeight: '320px' }}>
           {sector.icon?.asset && (
-            <div className="mb-4 flex items-center justify-center">
+            <div className="mb-4 flex items-center justify-center" style={{ width: 64, height: 64 }}>
               <Image
                 src={urlForImage(sector.icon)?.src || "/img/top.png"}
                 alt={sector.label}

@@ -65,7 +65,7 @@ export async function getAllPosts() {
     },
     author->{
       name,
-      slug,
+      "slug": slug.current,
       image
     },
     sector->{
@@ -111,7 +111,7 @@ export async function getPostBySlug(slug) {
     },
     author->{
       name,
-      slug,
+      "slug": slug.current,
       image
     }
   }`);
@@ -155,7 +155,7 @@ export async function getAuthorPostsBySlug(slug) {
       },
       author->{
         name,
-        slug,
+        "slug": slug.current,
         image
       }
     }
@@ -202,7 +202,7 @@ export async function getTopCategories() {
 }
 
 export async function getPaginatedPosts({ limit, pageIndex = 0 }) {
-  return client.fetch(`*[_type == "post"] | order(publishedAt desc) {
+  return client.fetch(`*[_type == "post"] | order(publishedAt desc)[${pageIndex}...${limit}] {
     _id,
     title,
     slug,
@@ -215,10 +215,10 @@ export async function getPaginatedPosts({ limit, pageIndex = 0 }) {
     },
     author->{
       name,
-      slug,
+      "slug": slug.current,
       image
     }
-  } | [${pageIndex} * ${limit}...${(pageIndex + 1) * limit}]`);
+  }`);
 }
 
 export async function getAllSectors() {

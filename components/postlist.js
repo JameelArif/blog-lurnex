@@ -6,6 +6,11 @@ import { parseISO, format } from "date-fns";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import CategoryLabel from "@/components/blog/category";
 
+// Helper to get author slug as string
+function getAuthorSlug(author) {
+  if (!author || !author.slug) return "";
+  return typeof author.slug === "string" ? author.slug : author.slug.current;
+}
 
 export default function PostList({
   post,
@@ -18,7 +23,7 @@ export default function PostList({
 }) {
   const imageProps = post?.mainImage ? urlForImage(post.mainImage) : null;
   const AuthorimageProps = post?.author?.image ? urlForImage(post.author.image) : null;
-  const authorSlug = post?.author?.slug?.current;
+  const authorSlug = getAuthorSlug(post.author);
   return (
 
     
