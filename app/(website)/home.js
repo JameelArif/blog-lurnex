@@ -57,7 +57,7 @@ export default function HomePage({ posts, sectors }) {
     <div className="text-center mt-8">
       <Link 
         href="/archive" 
-        className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+        className="inline-flex items-center px-6 py-3 bg-[#2DA9E1] text-white font-medium rounded-lg hover:bg-[#2495C8] transition-colors transition-colors"
       >
         View All Posts
         <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,18 +80,18 @@ export default function HomePage({ posts, sectors }) {
 
 
 
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <div className="flex flex-col  sm:flex-row gap-4 justify-center">
         <Link 
           href="/contact" 
-          className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+          className="inline-flex items-center px-6 py-3 bg-[#2DA9E1] text-white font-medium rounded-lg hover:bg-[#2495C8] transition-colors duration-200"
         >
           Get in Touch
         </Link>
         <Link 
-          href="/about" 
-          className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          Learn More About Us
+          href="https://lurnex.net/" 
+          className="inline-flex items-center px-6 py-3 border border-[#B0B0B0] text-[#4B5563] font-medium rounded-lg hover:bg-[#F5F5F5] hover:text-[#2DA9E1] transition-colors duration-200"
+          >
+          Learn More
         </Link>
       </div>
       
@@ -110,23 +110,11 @@ export default function HomePage({ posts, sectors }) {
               At Lurnex, we’re not just consultants we’re business architects. Our platform helps you shape up your business with engaging, real-world learning and practical tools. Our proven system and interactive platform keep learning active, relevant, and woven into daily work, saving you time, money, and frustration.
             </p>
   
-            <blockquote className="mt-8 italic text-blue-700 border-l-4 border-blue-300 pl-4">
+            <blockquote className="mt-8 italic text-[#2DA9E1]  border-l-4 border-blue-300 pl-4">
               “There’s a clarity that we have now around the direction we’re going in, what we need to do. We feel empowered and enabled to overcome any problems.”<br/>
               <span className="font-semibold"> Charles Moore, Managing Director, Nurture Vet Hospital</span>
             </blockquote>
-            <div className="mt-8">
-              <a href="https://www.lurnex.net/" className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">
-                Learn more about our business architecture and learning platform at Lurnex.net
-              </a>
-            </div>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/contact" className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                Get in Touch
-              </a>
-              <a href="/about" className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                Learn More About Us
-              </a>
-            </div>
+            
           </div>
         </section>
       </Container>
