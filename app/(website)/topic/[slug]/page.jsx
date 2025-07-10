@@ -160,7 +160,7 @@ export default async function TopicPage({ params }) {
                 Stay updated with our latest insights and discoveries in the {topic.label} topic.
               </p>
             </div>
-            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
+            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16 items-stretch">
               {posts.map((post) => (
                 <PostList 
                   key={post._id} 

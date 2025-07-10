@@ -49,7 +49,7 @@ export default function HomePage({ posts, sectors }) {
       Stay updated with our latest insights, tutorials, and industry analysis. 
       Our expert team shares valuable knowledge to help you stay ahead in the rapidly evolving tech landscape.
     </p>
-    <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
+    <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16 items-stretch">
       {latestPosts.map(post => (
         <PostList key={post._id} post={post} aspect="rectangle" />
       ))}
@@ -81,17 +81,12 @@ export default function HomePage({ posts, sectors }) {
 
 
       <div className="flex flex-col  sm:flex-row gap-4 justify-center">
-        <Link 
-          href="/contact" 
-          className="inline-flex items-center px-6 py-3 bg-[#2DA9E1] text-white font-medium rounded-lg hover:bg-[#2495C8] transition-colors duration-200"
-        >
-          Get in Touch
-        </Link>
+ 
         <Link 
           href="https://lurnex.net/" 
-          className="inline-flex items-center px-6 py-3 border border-[#B0B0B0] text-[#4B5563] font-medium rounded-lg hover:bg-[#F5F5F5] hover:text-[#2DA9E1] transition-colors duration-200"
+          className="inline-flex items-center justify-center px-6 py-3 bg-[#2DA9E1] text-white font-medium rounded-lg hover:bg-[#2495C8] transition-colors min-w-[180px]"
           >
-          Learn More
+          Learn More 
         </Link>
       </div>
       

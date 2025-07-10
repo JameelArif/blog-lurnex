@@ -1,96 +1,27 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  body {
-    @apply font-sans text-gray-800 antialiased;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
-  }
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 
-@layer components {
-  .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
-  }
-  
-  .btn-secondary {
-    @apply bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
-  }
-  
-  .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 hover:shadow-md;
-  }
-  
-  .prose-custom {
-    @apply prose prose-lg max-w-none;
-  }
-  
-  .prose-custom h2 {
-    @apply text-2xl font-serif font-semibold text-gray-900 mt-8 mb-4;
-  }
-  
-  .prose-custom h3 {
-    @apply text-xl font-serif font-semibold text-gray-900 mt-6 mb-3;
-  }
-  
-  .prose-custom p {
-    @apply text-gray-700 leading-relaxed mb-6;
-  }
-  
-  .prose-custom ul, .prose-custom ol {
-    @apply text-gray-700 leading-relaxed mb-6;
-  }
-  
-  .prose-custom blockquote {
-    @apply border-l-4 border-primary-500 pl-6 italic text-gray-600 my-6;
-  }
-  
-  .prose-custom code {
-    @apply bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm;
-  }
-  
-  .prose-custom pre {
-    @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto;
-  }
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
-/* Loading animation */
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-/* Fade in animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-  animation: fadeIn 0.5s ease-out;
-}
-
-/* Skeleton loading */
-@keyframes shimmer {
-  0% { background-position: -468px 0; }
-  100% { background-position: 468px 0; }
-}
-
-.skeleton {
-  @apply bg-gray-200 rounded;
-  background-image: linear-gradient(90deg, #f0f0f0 0px, #e0e0e0 40px, #f0f0f0 80px);
-  background-size: 468px;
-  animation: shimmer 1.2s ease-in-out infinite;
-}
+/* Custom styles */

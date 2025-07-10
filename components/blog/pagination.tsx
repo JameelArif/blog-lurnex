@@ -24,14 +24,16 @@ export default function Pagination({
     params.set("page", (pageIndex + 1).toString());
     const query = params.toString();
 
-    router.push(`/archive?${query}`);
+    // Preserve scroll position by using replace instead of push
+    router.replace(`/archive?${query}`, { scroll: false });
   };
 
   const handlePrevPage = () => {
     params.set("page", (pageIndex - 1).toString());
     const query = params.toString();
 
-    router.push(`/archive?${query}`);
+    // Preserve scroll position by using replace instead of push
+    router.replace(`/archive?${query}`, { scroll: false });
   };
 
   return (

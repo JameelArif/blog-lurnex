@@ -1,9 +1,10 @@
-import { getAllPosts, getAllAuthors, getAllCategories, getAllSectors, getAllCharacters, getAllTopics } from "@/lib/sanity/client";
+import { getAllPosts, getAllAuthors, getAllCategories, getAllSectors, getAllCharacters, getAllTopics, client } from "@/lib/sanity/client";
 import PostList from "@/components/postlist";
 import Link from "next/link";
 import { PortableText } from "@portabletext/react";
 import { urlForImage } from "@/lib/sanity/image";
-import { client } from "@/lib/sanity/client";
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import SearchForm from "@/components/SearchForm";
 
 export const revalidate = 60;
 
@@ -15,202 +16,209 @@ export async function generateMetadata({ searchParams }) {
   };
 }
 
-function plainTextFromPortableText(body) {
-  if (!Array.isArray(body)) return '';
-  return body.map(block => (block.children ? block.children.map(child => child.text).join('') : '')).join('\n');
-}
-
 export default async function SearchPage({ searchParams }) {
-  // Read filters from searchParams
-  const selectedAuthor = searchParams.author || '';
-  const selectedCategory = searchParams.category || '';
-  const selectedSector = searchParams.sector || '';
-  const selectedCharacter = searchParams.character || '';
-  const selectedTopic = searchParams.topic || '';
-  const selectedTitle = searchParams.title || '';
-  const publishedFrom = searchParams.publishedFrom || '';
-  const publishedTo = searchParams.publishedTo || '';
-  const query = (searchParams.q || '').toLowerCase();
+  try {
+    // Read filters from searchParams
+    const selectedAuthor = searchParams.author || '';
+    const selectedCategory = searchParams.category || '';
+    const selectedSector = searchParams.sector || '';
+    const selectedCharacter = searchParams.character || '';
+    const selectedTopic = searchParams.topic || '';
+    const selectedTitle = searchParams.title || '';
+    const publishedFrom = searchParams.publishedFrom || '';
+    const publishedTo = searchParams.publishedTo || '';
+    const query = (searchParams.q || '').toLowerCase();
 
-  // Build dynamic GROQ filter
-  let filters: string[] = [];
-  let params: Record<string, any> = {};
-  if (selectedAuthor) {
-    filters.push('author->slug.current == $author');
-    params.author = selectedAuthor;
-  }
-  if (selectedCategory) {
-    filters.push('$category in categories[]->slug.current');
-    params.category = selectedCategory;
-  }
-  if (selectedSector) {
-    filters.push('sector->slug.current == $sector');
-    params.sector = selectedSector;
-  }
-  if (selectedCharacter) {
-    filters.push('character->slug.current == $character');
-    params.character = selectedCharacter;
-  }
-  if (selectedTopic) {
-    filters.push('topic->slug.current == $topic');
-    params.topic = selectedTopic;
-  }
-  if (selectedTitle) {
-    filters.push('title match $title');
-    params.title = `*${selectedTitle}*`;
-  }
-  if (publishedFrom) {
-    filters.push('publishedAt >= $publishedFrom');
-    params.publishedFrom = publishedFrom;
-  }
-  if (publishedTo) {
-    filters.push('publishedAt <= $publishedTo');
-    params.publishedTo = publishedTo;
-  }
-  if (query) {
-    filters.push('(title match $query || excerpt match $query)');
-    params.query = `*${query}*`;
-  }
-  const whereClause = filters.length > 0 ? `[_type == "post" && ${filters.join(' && ')}]` : '[_type == "post"]';
-  const postsQuery = `*${whereClause} | order(publishedAt desc, _createdAt desc) {
-    _id,
-    _createdAt,
-    publishedAt,
-    mainImage {
-      ...,
-      "blurDataURL":asset->metadata.lqip,
-      "ImageColor": asset->metadata.palette.dominant.background,
-    },
-    featured,
-    excerpt,
-    slug,
-    title,
-    author-> {
+    // Build dynamic GROQ filter
+    let filters: string[] = [];
+    let params: Record<string, any> = {};
+    
+    if (selectedAuthor) {
+      filters.push('author->slug.current == $author');
+      params.author = selectedAuthor;
+    }
+    if (selectedCategory) {
+      filters.push('$category in categories[]->slug.current');
+      params.category = selectedCategory;
+    }
+    if (selectedSector) {
+      filters.push('sector->slug.current == $sector');
+      params.sector = selectedSector;
+    }
+    if (selectedCharacter) {
+      filters.push('character->slug.current == $character');
+      params.character = selectedCharacter;
+    }
+    if (selectedTopic) {
+      filters.push('topic->slug.current == $topic');
+      params.topic = selectedTopic;
+    }
+    if (selectedTitle) {
+      filters.push('title match $title');
+      params.title = `*${selectedTitle}*`;
+    }
+    if (publishedFrom) {
+      filters.push('publishedAt >= $publishedFrom');
+      params.publishedFrom = publishedFrom;
+    }
+    if (publishedTo) {
+      filters.push('publishedAt <= $publishedTo');
+      params.publishedTo = publishedTo;
+    }
+    if (query) {
+      filters.push('(title match $query || excerpt match $query)');
+      params.query = `*${query}*`;
+    }
+
+    const whereClause = filters.length > 0 ? `[_type == "post" && ${filters.join(' && ')}]` : '[_type == "post"]';
+    const postsQuery = `*${whereClause} | order(publishedAt desc, _createdAt desc) {
       _id,
-      image,
+      _createdAt,
+      publishedAt,
+      mainImage {
+        ...,
+        "blurDataURL":asset->metadata.lqip,
+        "ImageColor": asset->metadata.palette.dominant.background,
+      },
+      featured,
+      excerpt,
       slug,
-      name
-    },
-    categories[]->,
-    sector->{ label, "iconUrl": icon.asset->url, "slug": slug.current },
-    character->{ label, "iconUrl": icon.asset->url, "slug": slug.current },
-    topic->{ label, "iconUrl": icon.asset->url, "slug": slug.current }
-  }`;
+      title,
+      author-> {
+        _id,
+        image,
+        slug,
+        name
+      },
+      categories[]->,
+      sector->{ 
+        label, 
+        "iconUrl": icon.asset->url, 
+        "slug": slug.current 
+      },
+      character->{ 
+        label, 
+        "iconUrl": icon.asset->url, 
+        "slug": slug.current 
+      },
+      topic->{ 
+        label, 
+        "iconUrl": icon.asset->url, 
+        "slug": slug.current 
+      }
+    }`;
 
-  const [posts, authors, categories, sectors, characters, topics] = await Promise.all([
-    client.fetch(postsQuery, params),
-    getAllAuthors(),
-    getAllCategories(),
-    getAllSectors(),
-    getAllCharacters(),
-    getAllTopics(),
-  ]);
+    console.log('GROQ Query:', postsQuery);
+    console.log('Query Params:', params);
 
-  // Filter authors
-  const filteredAuthors = authors.filter(author =>
-    author.name?.toLowerCase().includes(query)
-  );
+    const [posts, authors, categories, sectors, characters, topics] = await Promise.all([
+      client.fetch(postsQuery, params),
+      getAllAuthors(),
+      getAllCategories(),
+      getAllSectors(),
+      getAllCharacters(),
+      getAllTopics(),
+    ]);
 
-  // Filter categories
-  const filteredCategories = categories.filter(category =>
-    category.title?.toLowerCase().includes(query)
-  );
+    // Debug logging
+    console.log('Search Debug:', {
+      query,
+      selectedSector,
+      selectedCharacter,
+      selectedTopic,
+      filters,
+      params,
+      postsCount: posts.length,
+      sectors: sectors.map(s => ({ label: s.label, slug: s.slug?.current })),
+      characters: characters.map(c => ({ label: c.label, slug: c.slug?.current })),
+      topics: topics.map(t => ({ label: t.label, slug: t.slug?.current }))
+    });
 
-  return (
-    <div className="bg-white">
-      {/* Filter Bar */}
-      <form className="container mx-auto px-4 lg:px-8 py-8 bg-blue-50 rounded-xl mt-8 mb-12" method="GET">
-        <div className="flex flex-wrap gap-4 items-end">
-          {/* Post Name */}
-          <div>
-            <label className="block text-xs font-medium mb-1">Post Name</label>
-            <input type="text" name="title" defaultValue={selectedTitle} className="px-2 py-1 border rounded-md" placeholder="Post title..." />
+    // Filter authors, categories, sectors, characters, topics for display
+    const filteredAuthors = authors.filter(author =>
+      author.name?.toLowerCase().includes(query)
+    );
+
+    const filteredCategories = categories.filter(category =>
+      category.title?.toLowerCase().includes(query)
+    );
+
+    const filteredSectors = sectors.filter(sector =>
+      sector.label?.toLowerCase().includes(query)
+    );
+
+    const filteredCharacters = characters.filter(character =>
+      character.label?.toLowerCase().includes(query)
+    );
+
+    const filteredTopics = topics.filter(topic =>
+      topic.label?.toLowerCase().includes(query)
+    );
+
+    const activeFiltersCount = Object.values({
+      q: query,
+      title: selectedTitle,
+      author: selectedAuthor,
+      category: selectedCategory,
+      sector: selectedSector,
+      character: selectedCharacter,
+      topic: selectedTopic,
+      publishedFrom,
+      publishedTo
+    }).filter(value => value !== '').length;
+
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <div className="bg-white border-b">
+          <div className="container mx-auto px-4 lg:px-8 py-8">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Search
+              </h1>
+              <p className="text-gray-600 mb-6">
+                Find articles, authors, and categories across our blog
+              </p>
+
+              {/* Search Form */}
+              <SearchForm 
+                initialFilters={{
+                  q: query,
+                  title: selectedTitle,
+                  author: selectedAuthor,
+                  category: selectedCategory,
+                  sector: selectedSector,
+                  character: selectedCharacter,
+                  topic: selectedTopic,
+                  publishedFrom,
+                  publishedTo
+                }}
+                authors={authors}
+                categories={categories}
+                sectors={sectors}
+                characters={characters}
+                topics={topics}
+                activeFiltersCount={activeFiltersCount}
+              />
+            </div>
           </div>
-          {/* Author */}
-          <div>
-            <label className="block text-xs font-medium mb-1">Author</label>
-            <select name="author" defaultValue={selectedAuthor} className="px-2 py-1 border rounded-md">
-              <option value="">All</option>
-              {authors.map(author => (
-                <option key={author._id} value={author.slug.current}>{author.name}</option>
-              ))}
-            </select>
-          </div>
-          {/* Category */}
-          <div>
-            <label className="block text-xs font-medium mb-1">Category</label>
-            <select name="category" defaultValue={selectedCategory} className="px-2 py-1 border rounded-md">
-              <option value="">All</option>
-              {categories.map(category => (
-                <option key={category._id} value={category.slug.current}>{category.title}</option>
-              ))}
-            </select>
-          </div>
-          {/* Sector */}
-          <div>
-            <label className="block text-xs font-medium mb-1">Sector</label>
-            <select name="sector" defaultValue={selectedSector} className="px-2 py-1 border rounded-md">
-              <option value="">All</option>
-              {sectors.map(sector => (
-                <option key={sector._id} value={sector.slug}>{sector.label}</option>
-              ))}
-            </select>
-          </div>
-          {/* Character */}
-          <div>
-            <label className="block text-xs font-medium mb-1">Character</label>
-            <select name="character" defaultValue={selectedCharacter} className="px-2 py-1 border rounded-md">
-              <option value="">All</option>
-              {characters.map(character => (
-                <option key={character._id} value={character.slug}>{character.label}</option>
-              ))}
-            </select>
-          </div>
-          {/* Topic */}
-          <div>
-            <label className="block text-xs font-medium mb-1">Topic</label>
-            <select name="topic" defaultValue={selectedTopic} className="px-2 py-1 border rounded-md">
-              <option value="">All</option>
-              {topics.map(topic => (
-                <option key={topic._id} value={topic.slug}>{topic.label}</option>
-              ))}
-            </select>
-          </div>
-          {/* Publish Date Range */}
-          <div>
-            <label className="block text-xs font-medium mb-1">Published From</label>
-            <input type="date" name="publishedFrom" defaultValue={publishedFrom} className="px-2 py-1 border rounded-md" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium mb-1">Published To</label>
-            <input type="date" name="publishedTo" defaultValue={publishedTo} className="px-2 py-1 border rounded-md" />
-          </div>
-          <button type="submit" className="ml-4 px-4 py-2 bg-lurnex-blue text-white rounded-md font-semibold">Apply Filters</button>
         </div>
-      </form>
 
-      {/* Search Results Header */}
-      <div className="relative bg-lurnex-blue py-24">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              {query ? `Search Results for "${query}"` : 'Search'}
-            </h1>
-            <p className="text-lg text-blue-100">
-              {posts.length + filteredAuthors.length + filteredCategories.length} result{posts.length + filteredAuthors.length + filteredCategories.length === 1 ? '' : 's'} found
-            </p>
-          </div>
-        </div>
-      </div>
+        {/* Results */}
+        <div className="container mx-auto px-4 lg:px-8 py-12">
+          <div className="max-w-7xl mx-auto">
+            {/* Results Summary */}
+            <div className="mb-8">
+              <p className="text-gray-600">
+                Found {posts.length} posts, {filteredAuthors.length} authors, and {filteredCategories.length} categories
+              </p>
+            </div>
 
-      <div className="py-20">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-7xl mx-auto space-y-16">
             {/* Posts Results */}
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Posts</h2>
-              {posts.length > 0 ? (
-                <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
+            {posts.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Posts</h2>
+                <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
                   {posts.map((post) => (
                     <PostList
                       key={post._id}
@@ -224,54 +232,198 @@ export default async function SearchPage({ searchParams }) {
                     />
                   ))}
                 </div>
-              ) : (
-                <div className="text-gray-500">No posts found.</div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Authors Results */}
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Authors</h2>
-              {filteredAuthors.length > 0 ? (
-                <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:gap-12">
+            {filteredAuthors.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Authors</h2>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {filteredAuthors.map(author => {
                     const authorImageUrl = author.image ? urlForImage(author.image) : null;
                     return (
-                      <div key={author._id} className="p-6 rounded-xl border bg-gray-50 flex flex-col items-center text-center">
-                        {authorImageUrl && (
-                          <img src={authorImageUrl.src} alt={author.name} className="w-20 h-20 rounded-full object-cover mb-3" />
+                      <Link
+                        key={author._id}
+                        href={`/author/${author.slug?.current}`}
+                        className="group bg-white rounded-lg border border-gray-200 p-6 flex items-center space-x-4 transition-transform hover:scale-105 hover:shadow-lg hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        style={{ minHeight: 110 }}
+                      >
+                        {authorImageUrl ? (
+                          <img 
+                            src={authorImageUrl.src} 
+                            alt={author.name} 
+                            className="w-16 h-16 rounded-full object-cover shadow-md border border-gray-200 bg-white group-hover:border-blue-400 transition"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center shadow-md border border-gray-200">
+                            <span className="text-gray-500 text-lg font-semibold">
+                              {author.name?.charAt(0)}
+                            </span>
+                          </div>
                         )}
-                        <h3 className="text-lg font-semibold mb-1">{author.name}</h3>
-                        {author.bio && <div className="text-gray-600 text-sm mb-2"><PortableText value={author.bio} /></div>}
-                        <Link href={`/author/${author.slug.current}`} className="text-lurnex-blue font-medium hover:underline">View Profile</Link>
-                      </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                            {author.name}
+                          </h3>
+                          {author.bio && (
+                            <div className="text-gray-600 text-sm overflow-hidden">
+                              {typeof author.bio === 'string' ? (
+                                <p className="line-clamp-2">{author.bio}</p>
+                              ) : (
+                                <div className="line-clamp-2">
+                                  <PortableText value={author.bio} />
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          <span className="text-blue-600 hover:text-blue-700 text-sm font-medium mt-2 inline-block transition-colors">View Profile →</span>
+                        </div>
+                      </Link>
                     );
                   })}
                 </div>
-              ) : (
-                <div className="text-gray-500">No authors found.</div>
-              )}
-            </div>
+              </div>
+            )}
+
+            {/* No Results */}
+            {posts.length === 0 && filteredAuthors.length === 0 && filteredCategories.length === 0 && (
+              <div className="text-center py-12">
+                <div className="max-w-md mx-auto">
+                  <MagnifyingGlassIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No results found</h3>
+                  <p className="text-gray-600 mb-6">
+                    Try adjusting your search terms or filters to find what you're looking for.
+                  </p>
+                  <Link
+                    href="/search"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Clear all filters
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* Sectors Results */}
+            {filteredSectors.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Sectors</h2>
+                <div className="flex flex-wrap gap-6">
+                  {filteredSectors.map(sector => (
+                    <Link
+                      key={sector._id}
+                      href={`/sector/${sector.slug?.current}`}
+                      className="group flex flex-col items-center transition-transform hover:scale-110"
+                      style={{ minWidth: 80 }}
+                    >
+                      {sector.iconUrl && (
+                        <img
+                          src={sector.iconUrl}
+                          alt={sector.label}
+                          className="w-16 h-16 rounded-full shadow-md border border-gray-200 bg-white group-hover:border-blue-400 transition"
+                          style={{ objectFit: 'contain' }}
+                        />
+                      )}
+                      <span className="mt-2 text-sm font-medium text-gray-700 text-center">{sector.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Characters Results */}
+            {filteredCharacters.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Characters</h2>
+                <div className="flex flex-wrap gap-6">
+                  {filteredCharacters.map(character => (
+                    <Link
+                      key={character._id}
+                      href={`/character/${character.slug?.current}`}
+                      className="group flex flex-col items-center transition-transform hover:scale-110"
+                      style={{ minWidth: 80 }}
+                    >
+                      {character.iconUrl && (
+                        <img
+                          src={character.iconUrl}
+                          alt={character.label}
+                          className="w-16 h-16 rounded-full shadow-md border border-gray-200 bg-white group-hover:border-blue-400 transition"
+                          style={{ objectFit: 'contain' }}
+                        />
+                      )}
+                      <span className="mt-2 text-sm font-medium text-gray-700 text-center">{character.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Topics Results */}
+            {filteredTopics.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Topics</h2>
+                <div className="flex flex-wrap gap-6">
+                  {filteredTopics.map(topic => (
+                    <Link
+                      key={topic._id}
+                      href={`/topic/${topic.slug?.current}`}
+                      className="group flex flex-col items-center transition-transform hover:scale-110"
+                      style={{ minWidth: 80 }}
+                    >
+                      {topic.iconUrl && (
+                        <img
+                          src={topic.iconUrl}
+                          alt={topic.label}
+                          className="w-16 h-16 rounded-full shadow-md border border-gray-200 bg-white group-hover:border-blue-400 transition"
+                          style={{ objectFit: 'contain' }}
+                        />
+                      )}
+                      <span className="mt-2 text-sm font-medium text-gray-700 text-center">{topic.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Categories Results */}
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Categories</h2>
-              {filteredCategories.length > 0 ? (
-                <div className="flex flex-wrap gap-4">
+            {/*
+            {filteredCategories.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Categories</h2>
+                <div className="flex flex-wrap gap-3">
                   {filteredCategories.map(category => (
-                    <Link key={category._id || category.slug} href={`/category/${category.slug?.current || category.slug}`} className="px-4 py-2 rounded-full bg-blue-100 text-lurnex-blue font-medium hover:bg-blue-200">
+                    <Link 
+                      key={category._id} 
+                      href={`/category/${category.slug?.current}`} 
+                      className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full font-medium hover:bg-blue-200 transition-colors"
+                    >
                       {category.title}
                     </Link>
                   ))}
                 </div>
-              ) : (
-                <div className="text-gray-500">No categories found.</div>
-              )}
-            </div>
-
+              </div>
+            )}
+            */}
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error('Search page error:', error);
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Something went wrong</h1>
+          <p className="text-gray-600 mb-6">We're having trouble loading the search page.</p>
+          <Link
+            href="/"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go back home
+          </Link>
+        </div>
+      </div>
+    );
+  }
 } 

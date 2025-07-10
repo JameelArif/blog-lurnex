@@ -171,17 +171,17 @@ export default async function SectorPage({ params, searchParams }: { params: Par
                 Stay updated with our latest insights and discoveries in the {sector.label} sector.
               </p>
             </div>
-            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
-              {paginatedPosts.map((post: any) => (
-                <PostList
-                  key={post._id}
-                  post={post}
-                  aspect="rectangle"
-                  minimal={false}
-                  pathPrefix={""}
+            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16 items-stretch">
+              {posts.map((post) => (
+                <PostList 
+                  key={post._id} 
+                  post={post} 
+                  aspect="rectangle" 
+                  minimal={false} 
+                  pathPrefix="post" 
                   preloadImage={false}
-                  fontSize={undefined}
-                  fontWeight={undefined}
+                  fontSize="large"
+                  fontWeight="bold"
                 />
               ))}
             </div>

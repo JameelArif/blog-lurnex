@@ -131,7 +131,7 @@ export default async function CharacterPage({ params }) {
                 Stay updated with our latest insights and discoveries in the {character.label} character.
               </p>
             </div>
-            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
+            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16 items-stretch">
               {posts.map((post) => (
                 <PostList key={post._id} post={post} aspect="rectangle" />
               ))}
